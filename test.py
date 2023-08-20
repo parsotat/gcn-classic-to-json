@@ -5,8 +5,9 @@ from gcn_kafka import Consumer
 
 # Connect as a consumer.
 # Warning: don't share the client secret with others.
-consumer = Consumer(client_id=os.environ['CLIENT_ID'],
-                    client_secret=os.environ['CLIENT_SECRET'])
+consumer = Consumer(client_id=os.environ['GCN_CLIENT_ID'],
+                    client_secret=os.environ['GCN_CLIENT_SECRET'],
+                    domain=os.environ.get('GCN_DOMAIN'))
 
 # Subscribe to topics and receive alerts
 consumer.subscribe(['igwn.gwalert'])
