@@ -1,5 +1,5 @@
+import datetime
 import os
-import sys
 
 from gcn_kafka import Consumer
 
@@ -17,8 +17,8 @@ consumer.subscribe(['igwn.gwalert'])
 print('Entering consume loop')
 while True:
     for message in consumer.consume(timeout=1):
+        now = datetime.datetime.utcnow().isoformat()
         if message.error():
-            print(message.error(), file=sys.stderr)
-            continue
+            print(now, message.error())
         else:
-            print('got message')
+            print(now, 'got message')
