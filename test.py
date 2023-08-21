@@ -34,7 +34,6 @@ broker_state = prometheus_client.Enum(
 
 
 def stats_cb(data):
-    log.info('got stats')
     stats = json.loads(data)
     for broker in stats['brokers'].values():
         broker_state.labels(broker['name']).state(broker['state'])
