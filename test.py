@@ -75,7 +75,8 @@ def test(prometheus, loglevel):
 
     # Subscribe to topics and receive alerts
     log.info('Subscribing')
-    consumer.subscribe(['igwn.gwalert'])
+    topics = list(consumer.list_topics().topics.keys())
+    consumer.subscribe(topics)
 
     log.info('Entering consume loop')
     while True:
