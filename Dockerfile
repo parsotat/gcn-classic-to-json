@@ -9,6 +9,6 @@ FROM python:slim
 FROM python:3.10-slim
 COPY --from=build /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
 COPY --from=build /src/ /src/
-COPY --from=build /usr/local/bin/gcn-classic-to-kafka /usr/local/bin/
+COPY --from=build /usr/local/bin/gcn-monitor /usr/local/bin/
 ENTRYPOINT ["gcn-classic-to-kafka"]
 USER nobody:nogroup
