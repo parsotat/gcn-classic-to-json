@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "gcn-monitor"
+version = "0.1.0"
+description = "Monitor GCN services"
+authors = ["Leo Singer <leo.singer@ligo.org>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+click = "^8.1.7"
+gcn-kafka = "^0.3.3"
+python = "^3.9"
+prometheus-client = "^0.17.1"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+
+[tool.poetry.scripts]
+gcn-monitor = "gcn_monitor.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
