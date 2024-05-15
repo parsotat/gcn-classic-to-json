@@ -24,14 +24,10 @@ def kafka_delivered_cb(err, msg):
 
 
 def run():
-    binary_topic_prefix = 'gcn.classic.binary.'
-    json_topic_prefix = 'gcn.classic.json.'
+    binary_topic_prefix = "gcn.classic.binary."
+    json_topic_prefix = "gcn.classic.json."
     int4 = struct.Struct("!l")
-    funcs = {
-        key: value
-        for key, value in notices.__dict__.items()
-        if key.isupper()
-    }
+    funcs = {key: value for key, value in notices.__dict__.items() if key.isupper()}
 
     log.info("Creating consumer")
     config = gcn_kafka.config_from_env()
@@ -54,7 +50,7 @@ def run():
             else:
                 log.info("topic %s: got message", topic)
                 ints = int4.iter_unpack(message.value())
-                key = topic[len(binary_topic_prefix):]
+                key = topic[len(binary_topic_prefix) :]
                 func = funcs[key]
                 json_data = json.dumps(func(*ints))
                 producer.produce(json_topic_prefix + key, json_data)
