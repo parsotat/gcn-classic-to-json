@@ -1,6 +1,6 @@
 # gcn-classic-to-json
 
-A Kafka client instrumented with Prometheus.
+Convert GCN Classic notices to JSON.
 
 ## Configuration
 
