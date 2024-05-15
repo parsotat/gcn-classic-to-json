@@ -1,4 +1,4 @@
-# gcn-monitor
+# gcn-classic-to-json
 
 A Kafka client instrumented with Prometheus.
 

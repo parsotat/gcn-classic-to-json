@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "gcn-monitor"
+name = "gcn-classic-to-json"
 version = "0.1.0"
-description = "Monitor connectivity of a Kafka client"
+description = "Convert GCN Classic notices to JSON"
 authors = ["Leo Singer <leo.singer@ligo.org>"]
 license = "Apache-2.0"
 readme = "README.md"
@@ -17,7 +17,7 @@ black = "*"
 flake8 = "^6.1.0"
 
 [tool.poetry.scripts]
-gcn-monitor = "gcn_monitor.cli:main"
+gcn-classic-to-json = "gcn_classic_to_json.cli:main"
 
 [build-system]
 requires = ["poetry-core"]

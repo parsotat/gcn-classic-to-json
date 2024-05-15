@@ -25,8 +25,6 @@ def stats_cb(data):
 def run():
     log.info("Creating consumer")
     config = gcn_kafka.config_from_env()
-    config["stats_cb"] = stats_cb
-    config["statistics.interval.ms"] = 1e3
     consumer = gcn_kafka.Consumer(config)
 
     log.info("Subscribing")
