@@ -15,9 +15,13 @@ prometheus-client = "^0.17.1"
 [tool.poetry.group.dev.dependencies]
 black = "*"
 flake8 = "^6.1.0"
+pytest = "*"
 
 [tool.poetry.scripts]
 gcn-classic-to-json = "gcn_classic_to_json.cli:main"
+
+[tool.poetry.plugins.pytest11]
+gcn_classic_to_json = "gcn_classic_to_json.test"
 
 [build-system]
 requires = ["poetry-core"]
