@@ -1,5 +1,7 @@
 # gcn-classic-to-json
 
+[![codecov](https://codecov.io/gh/nasa-gcn/gcn-classic-to-json/graph/badge.svg?token=nek42MSXHM)](https://codecov.io/gh/nasa-gcn/gcn-classic-to-json)
+
 Convert GCN Classic notices to JSON.
 
 ## Configuration
