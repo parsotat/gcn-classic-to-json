@@ -4,7 +4,7 @@ import struct
 
 _int4 = struct.Struct("!l")
 _parsers = {
-    module: importlib.import_module(f'.{module}', __package__).parse
+    module: importlib.import_module(f".{module}", __package__).parse
     for _, module, _ in pkgutil.iter_modules(__path__)
 }
 
