@@ -28,7 +28,7 @@ This package uses [Poetry](https://python-poetry.org) for packaging and Python v
 
 1.  Create a new subdirectory in https://github.com/nasa-gcn/gcn-classic-to-json/tree/main/gcn_classic_to_json/notices with a name corresponding to the GCN Classic notice type.
 
-2.  Save a specimen of the 160-byte format GCN Notice in that directory under the filename `example.bin`.
+2.  Save a specimen of the 160-byte format GCN Notice in that directory under the filename `example.bin`. Some directories are pre-populated with recent specimens.
 
 3.  Add a file called `__init__.py` to that directory. In that file, define a single Python function which takes the an array of 40-byte integers as input and returns a dictionary as output. See [GCN Classic documentation](https://gcn.gsfc.nasa.gov/sock_pkt_def_doc.html) for an explanation of the binary field layout.
 
