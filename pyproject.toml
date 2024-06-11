@@ -8,6 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 astropy = "*"
+numpy = "*"
 click = "^8.1.7"
 gcn-kafka = "^0.3.3"
 python = "^3.9"
