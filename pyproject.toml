@@ -18,6 +18,7 @@ prometheus-client = "^0.17.1"
 black = "*"
 flake8 = "^6.1.0"
 pytest = "*"
+pytest-cov = "*"
 
 [tool.poetry.scripts]
 gcn-classic-to-json = "gcn_classic_to_json.cli:main"
