@@ -32,7 +32,7 @@ For a mostly complete example, see https://github.com/nasa-gcn/gcn-classic-to-js
 
 2.  Save a specimen of the 160-byte format GCN Notice in that directory under the filename `example.bin`. Some directories are pre-populated with recent specimens.
 
-3.  Add a file called `__init__.py` to that directory. In that file, define a single Python function which takes the an array of 40-byte integers as input and returns a dictionary as output. See [GCN Classic documentation](https://gcn.gsfc.nasa.gov/sock_pkt_def_doc.html) for an explanation of the binary field layout.
+3.  Add a file called `__init__.py` to that directory. In that file, define a single Python function which takes the an array of 40 4-byte integers as input and returns a dictionary as output. See [GCN Classic documentation](https://gcn.gsfc.nasa.gov/sock_pkt_def_doc.html) for an explanation of the binary field layout.
 
 4.  Run `pytest --generate` to run the test suite with and generate the expected output JSON file for your new notice type. It will create a new file called `example.json` in your new directory.
 
