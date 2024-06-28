@@ -1,7 +1,7 @@
 {
   "mission": "Swift",
   "instrument": "BAT",
-  "trigger_time": "2024-05-11T18:06:53.220",
+  "trigger_time": "2024-05-11T18:06:53.340",
   "ra": 336.66450000000003,
   "dec": 8.5135,
   "ra_dec_error": 0.05

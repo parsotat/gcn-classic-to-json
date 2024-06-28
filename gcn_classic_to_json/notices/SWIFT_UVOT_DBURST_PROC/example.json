@@ -1,0 +1,8 @@
+{
+  "mission": "Swift",
+  "instrument": "UVOT",
+  "trigger_time": "2024-05-11T18:08:43.660",
+  "ra": 336.6701,
+  "dec": 8.5244,
+  "ra_dec_error": 73714.3757
+}

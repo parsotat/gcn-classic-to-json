@@ -1,0 +1,8 @@
+{
+  "mission": "Swift",
+  "instrument": "XRT",
+  "trigger_time": "2024-05-11T18:14:30.160",
+  "ra": 336.671,
+  "dec": 8.5228,
+  "ra_dec_error": 657.9051000000001
+}
