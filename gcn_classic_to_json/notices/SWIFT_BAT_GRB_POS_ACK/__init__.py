@@ -13,13 +13,13 @@ from astropy.time import Time
 TJD0 = (2440000, 0.5)
 
 mission="Swift"
-instrument="BAT"
+instrument=None #insert instrument here for appropriate notice type
 
 
 def parse(bin):
     packet_dict=dict(
-        mission=mission
-        instrument=instrument
+        mission=mission,
+        instrument=instrument,
         trigger_time=Time(
             bin[5] + TJD0[0],
             bin[6] / 8640000 + TJD0[1],
