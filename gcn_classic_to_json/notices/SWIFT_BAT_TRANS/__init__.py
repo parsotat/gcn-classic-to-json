@@ -13,7 +13,7 @@ from astropy.time import Time
 TJD0 = (2440000, 0.5)
 
 mission="Swift"
-instrument=None #insert instrument here for appropriate notice type
+instrument="BAT" #insert instrument here for appropriate notice type
 
 
 def parse(bin):
