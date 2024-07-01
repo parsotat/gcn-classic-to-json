@@ -11,5 +11,10 @@
   "latitude": -11.13,
   "longitude": 151.31,
   "image_snr": 8.52,
-  "rate_snr": 14.89
+  "rate_snr": 14.89,
+  "rate_duration": 2.048,
+  "image_duration": null,
+  "trigger_type": "rate",
+  "rate_energy_range": null,
+  "image_energy_range": null
 }

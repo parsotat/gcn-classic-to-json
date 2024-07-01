@@ -55,6 +55,26 @@ instrument="BAT" #insert instrument here for appropriate notice type
 
 
 def parse(bin):
+    
+    solution_bits=f"{bin[18]:032b}"
+    merit_bits_03=f"{bin[36]:032b}"
+    merit_bits_47=f"{bin[37]:032b}"
+    merit_bits_89=f"{bin[38]:032b}"
+    misc_bits=f"{bin[19]:032b}"
+    
+    trig_dur=bin[14]*4/1000
+    image_duration=None
+    rate_duration=None
+    if int(solution_bits[4])==1:
+        trig_type="image"
+        image_duration=trig_dur
+        rate_duration=None
+    else:
+        trig_type="rate"
+        image_duration=None
+        rate_duration=trig_dur
+    
+
     packet_dict=dict(
         mission=mission,
         instrument=instrument,
@@ -73,5 +93,10 @@ def parse(bin):
         longitude=int(hex(bin[16]  & 0xffff),16)/100, 
         image_snr=bin[20]/100,
         rate_snr=bin[21]/100,
+        rate_duration=rate_duration,
+        image_duration=image_duration,
+        trigger_type=trig_type,
+        rate_energy_range=None,
+        image_energy_range=None
     )
     return packet_dict
