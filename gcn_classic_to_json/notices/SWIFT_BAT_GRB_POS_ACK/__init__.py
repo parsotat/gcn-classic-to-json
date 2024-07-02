@@ -43,6 +43,7 @@ long         39      pkt_term     integer         Pkt Termination (always = \n)
 """
 
 from astropy.time import Time
+import ctypes
 
 #set constants for ease of use
 
@@ -53,8 +54,47 @@ TJD0 = (2440000, 0.5)
 mission="Swift"
 instrument="BAT" #insert instrument here for appropriate notice type
 
+#define the latitude/longitude parser for the long integer. See eg bit fields section here: https://wiki.python.org/moin/BitManipulation
+class LatLongBits( ctypes.LittleEndianStructure ):
+    _fields_ = [
+                ("long",     ctypes.c_int , 16 ),  # asByte & 1
+                ("lat", ctypes.c_int, 16 ),  # asByte & 2
+               ]
+class LatLongValues( ctypes.Union ):
+    _anonymous_ = ("bit",)
+    _fields_ = [
+                ("bit",    LatLongBits ),
+                ("asByte", ctypes.c_int32    )
+               ]
+
+#define the solution status flag bits
+class SolutionFlagsBits( ctypes.LittleEndianStructure ):
+    _fields_ = [
+                ("point_src",     ctypes.c_uint8, 1 ),  # asByte & 1
+                ("grb", ctypes.c_uint8, 1 ),  # asByte & 2
+                ("interesting",    ctypes.c_uint8, 1 ),  # asByte & 4
+                ("fl_cat_src",       ctypes.c_uint8, 1 ),  # asByte & 8
+                ("image_trig",       ctypes.c_uint8, 1 ),
+               ]
+               
+class SolutionFlags( ctypes.Union ):
+    _anonymous_ = ("bit",)
+    _fields_ = [
+                ("bit",    SolutionFlagsBits ),
+                ("asByte", ctypes.c_int32    )
+               ]
+
 
 def parse(bin):
+    
+    #call the latlong parser
+    latlong=LatLongValues()
+    latlong.asByte = bin[16]
+    
+    #call the solution status parser
+    solution_flags=SolutionFlags()
+    solution_flags.asByte = bin[18]
+
     
     solution_bits=f"{bin[18]:032b}"
     merit_bits_03=f"{bin[36]:032b}"
@@ -65,7 +105,7 @@ def parse(bin):
     trig_dur=bin[14]*4/1000
     image_duration=None
     rate_duration=None
-    if int(solution_bits[4])==1:
+    if solution_flags.image_trig ==1: #int(solution_bits[4])==1:
         trig_type="image"
         image_duration=trig_dur
         rate_duration=None
@@ -73,7 +113,6 @@ def parse(bin):
         trig_type="rate"
         image_duration=None
         rate_duration=trig_dur
-    
 
     packet_dict=dict(
         mission=mission,
@@ -89,8 +128,8 @@ def parse(bin):
         ra_dec_error=1e-4 * bin[11],
         instrument_phi=bin[12]/100,
         instrument_theta=bin[13]/100,
-        latitude=int(f"{bin[16]:032b}"[:16],2)/100 ,
-        longitude=int(hex(bin[16]  & 0xffff),16)/100, 
+        latitude=latlong.lat/100, #int(f"{bin[16]:032b}"[:16],2)/100 ,
+        longitude=latlong.long/100,# int(hex(bin[16]  & 0xffff),16)/100,
         image_snr=bin[20]/100,
         rate_snr=bin[21]/100,
         rate_duration=rate_duration,
