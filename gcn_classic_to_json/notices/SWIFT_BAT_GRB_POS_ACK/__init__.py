@@ -70,11 +70,11 @@ class LatLongValues( ctypes.Union ):
 #define the solution status flag bits
 class SolutionFlagsBits( ctypes.LittleEndianStructure ):
     _fields_ = [
-                ("point_src",     ctypes.c_uint8, 1 ),  # asByte & 1
-                ("grb", ctypes.c_uint8, 1 ),  # asByte & 2
-                ("interesting",    ctypes.c_uint8, 1 ),  # asByte & 4
-                ("fl_cat_src",       ctypes.c_uint8, 1 ),  # asByte & 8
-                ("image_trig",       ctypes.c_uint8, 1 ),
+                ("point_src",     ctypes.c_int32, 1 ),  # asByte & 1
+                ("grb", ctypes.c_int32, 1 ),  # asByte & 2
+                ("interesting",    ctypes.c_int32, 1 ),  # asByte & 4
+                ("fl_cat_src",       ctypes.c_int32, 1 ),  # asByte & 8
+                ("image_trig",       ctypes.c_int32, 1 ),
                ]
                
 class SolutionFlags( ctypes.Union ):
@@ -83,6 +83,67 @@ class SolutionFlags( ctypes.Union ):
                 ("bit",    SolutionFlagsBits ),
                 ("asByte", ctypes.c_int32    )
                ]
+
+#define the miscellaneous flag bits
+class MiscFlagsBits( ctypes.LittleEndianStructure ):
+    _fields_ = [
+                ("unassigned",     ctypes.c_int32, 11 ),  # asByte & 1
+                ("invalid_coord", ctypes.c_int32, 1 ),  # asByte & 2
+                ("already_pointed",       ctypes.c_int32, 1 ),  # asByte & 8
+                ("near_bright_star",    ctypes.c_int32, 1 ),  # asByte & 4
+                ("pos_in_galaxy",       ctypes.c_int32, 1 ),
+                ("galaxy_in_pos",       ctypes.c_int32, 1 ),
+                ("unassigned_1",     ctypes.c_int32, 4 ),
+                ("subthresh_to_real",     ctypes.c_int32, 1 ),
+               ]
+               
+class MiscFlags( ctypes.Union ):
+    _anonymous_ = ("bit",)
+    _fields_ = [
+                ("bit",    MiscFlagsBits ),
+                ("asByte", ctypes.c_int32    )
+               ]
+
+#define the merit bit flags/values for merit 0-3
+class Merit0Bits( ctypes.LittleEndianStructure ):
+    _fields_ = [
+                ("long",     ctypes.c_int , 16 ),  # asByte & 1
+                ("lat", ctypes.c_int, 16 ),  # asByte & 2
+               ]
+class Merit0Values( ctypes.Union ):
+    _anonymous_ = ("bit",)
+    _fields_ = [
+                ("bit",    Merit0Bits ),
+                ("asByte", ctypes.c_int32    )
+               ]
+
+#define the merit bit flags/values for merit 4-7
+class Merit4Bits( ctypes.LittleEndianStructure ):
+    _fields_ = [
+                ("long",     ctypes.c_int , 16 ),  # asByte & 1
+                ("lat", ctypes.c_int, 16 ),  # asByte & 2
+               ]
+class Merit4Values( ctypes.Union ):
+    _anonymous_ = ("bit",)
+    _fields_ = [
+                ("bit",    Merit4Bits ),
+                ("asByte", ctypes.c_int32    )
+               ]
+
+#define the merit bit flags/values for merit 8-9
+class Merit8Bits( ctypes.LittleEndianStructure ):
+    _fields_ = [
+                ("long",     ctypes.c_int , 16 ),  # asByte & 1
+                ("lat", ctypes.c_int, 16 ),  # asByte & 2
+               ]
+class Merit8Values( ctypes.Union ):
+    _anonymous_ = ("bit",)
+    _fields_ = [
+                ("bit",    Merit8Bits ),
+                ("asByte", ctypes.c_int32    )
+               ]
+
+
 
 
 def parse(bin):
