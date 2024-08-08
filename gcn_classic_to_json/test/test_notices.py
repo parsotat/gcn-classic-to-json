@@ -11,12 +11,6 @@ from ..notices import _frombuffer as _orig_frombuffer
 files = importlib.resources.files(notices)
 
 
-def keys_passing_except_for(*failing):
-    return list(set(notices.keys) - set(failing)) + [
-        pytest.param(item, marks=pytest.mark.xfail) for item in failing
-    ]
-
-
 class NDArrayNanny(np.ndarray):
     """A ndarray subclass that tracks which elements have been accessed.
 
@@ -44,10 +38,7 @@ class NDArrayNanny(np.ndarray):
         return super().__getitem__(i)
 
 
-@pytest.mark.parametrize(
-    "key",
-    keys_passing_except_for("SWIFT_BAT_GRB_POS_ACK"),
-)
+@pytest.mark.parametrize("key", notices.keys)
 def test_all_fields_used(key, monkeypatch):
     """Check that every field in the binary packet is used in the conversion."""
 
