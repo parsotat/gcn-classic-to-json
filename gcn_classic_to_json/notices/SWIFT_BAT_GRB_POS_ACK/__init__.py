@@ -24,6 +24,8 @@ flag_descriptions = {
     30: "This is a test submission",
 }
 
+energy_ranges = [[15, 25], [15, 50], [25, 100], [50, 350]]
+
 
 def parse(bin):
     bin[15]  # Unused. According to docs: '4 bytes for the future'
@@ -44,7 +46,6 @@ def parse(bin):
 
     calalog_num = bin[25]
 
-    energy_ranges = [[15, 25], [15, 50], [25, 100], [50, 350]]
     energy_range_idx = np.flip(bin[37:38].view(dtype="i1"))[0]
     energy_range = energy_ranges[energy_range_idx]
 
