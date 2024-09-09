@@ -2,29 +2,8 @@ import numpy as np
 
 from ... import utils
 
-flag_descriptions = {
-    0: "A point source was found.",
-    1: "It is a GRB.",
-    2: "It is an interesting src.",
-    3: "It is in the flight catalog.",
-    5: "It is definitely not a GRB.",
-    6: "It is probably not a GRB or Transient(hi bkg level).",
-    7: "It is probably not a GRB or Transient(low image significance; < 7).",
-    8: "It is in the ground catalog.",
-    9: "It is probably not a GRB or Transient(negative bkg slop).",
-    10: "StraTracker not locked so trigger porbably bogus.",
-    11: "It is probably not a GRB or Transient(very low image significance; < 6.5).",
-    12: "It is the catalog of sources to be blocked.",
-    13: "There is a bright star nearby.",
-    14: "This was orginally a SubTresh, but it is now converted to a real BAT_POS.",
-    15: "This is a source that has purposefully been removed from on-board catalog.",
-    16: "This matched a Nearby_Galaxy in the on-board catalog.",
-    28: "There was a temporal coincidence with another event.",
-    29: "There was a spatial coincidence with another event.",
-    30: "This is a test submission",
-}
-
 energy_ranges = [[15, 25], [15, 50], [25, 100], [50, 350]]
+start_tracker_status = ["locked", "not locked"]
 
 
 def parse(bin):
@@ -39,10 +18,30 @@ def parse(bin):
     lat, lon = bin[16:17].view(">i2")
 
     soln_status_bits = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
-
-    comments = "\n".join(
-        [val for (key, val) in flag_descriptions.items() if (soln_status_bits[key])]
-    )
+    soln_status_bits[8]  # Unused. According to docs: 'ground_catalog_source'.
+    soln_status_bits[12]  # Unused. According to docs: 'blocked_catalog_source'.
+    # These seems to be cross-referenced with a ground catalog with the name of the source printed in the text notices.
+    # But since the name of this source isn't stored in the these packets, I don't see a reason to include it.
+    if soln_status_bits[11]:
+        grb_status = (
+            "It is probably not a GRB or transient due to very low image significance"
+        )
+    elif soln_status_bits[7]:
+        grb_status = (
+            "It is probably not a GRB or transient due to low image significance"
+        )
+    elif soln_status_bits[9]:
+        grb_status = (
+            "It is probably not a GRB or transient due to negative background slope"
+        )
+    elif soln_status_bits[6]:
+        grb_status = (
+            "It is probably not a GRB or transient due to high background level"
+        )
+    elif soln_status_bits[1]:
+        grb_status = "It is a GRB"
+    else:
+        grb_status = "It is not a GRB"
 
     calalog_num = bin[25]
 
@@ -53,6 +52,8 @@ def parse(bin):
         "mission": "SWIFT",
         "instrument": "BAT",
         "id": [bin[4]],
+        "alert_tense": "test" if soln_status_bits[30] else "current",
+        "alert_type": "retraction" if soln_status_bits[5] else "initial",
         "trigger_time": utils.datetime_to_iso8601(bin[5], bin[6]),
         "trigger_type": "image" if soln_status_bits[4] else "rate",
         "image_duration": integ_time if soln_status_bits[4] else None,
@@ -75,5 +76,14 @@ def parse(bin):
         "backgroun_duration": bin[24] * 1e-2,
         "trigger_index": bin[17],
         "catalog_number": calalog_num if soln_status_bits[3] else None,
-        "additional_info": comments if comments else None,
+        "grb_status": grb_status,
+        "point_source": bool(soln_status_bits[0]),
+        "flaring_known_source": bool(soln_status_bits[2]),
+        "star_tracker_status": start_tracker_status[soln_status_bits[10]],
+        "bright_star_nearby": bool(soln_status_bits[13]),
+        "originally_subtresh": bool(soln_status_bits[14]),
+        "removed_from_catalog": bool(soln_status_bits[15]),
+        "galaxy_nearby": bool(soln_status_bits[16]),
+        "temporal_coincidence": bool(soln_status_bits[28]),
+        "spatial_coincidence": bool(soln_status_bits[29]),
     }

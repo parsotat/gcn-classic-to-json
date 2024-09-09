@@ -4,6 +4,8 @@
   "id": [
     1227767
   ],
+  "alert_tense": "current",
+  "alert_type": "initial",
   "trigger_time": "2024-05-11T18:06:53.220Z",
   "trigger_type": "rate",
   "image_duration": null,
@@ -26,5 +28,14 @@
   "backgroun_duration": 24.0,
   "trigger_index": 262,
   "catalog_number": null,
-  "additional_info": "A point source was found.\nIt is a GRB.\nThere was a spatial coincidence with another event."
+  "grb_status": "It is a GRB",
+  "point_source": true,
+  "flaring_known_source": false,
+  "star_tracker_status": "locked",
+  "bright_star_nearby": false,
+  "originally_subtresh": false,
+  "removed_from_catalog": false,
+  "galaxy_nearby": false,
+  "temporal_coincidence": false,
+  "spatial_coincidence": true
 }
