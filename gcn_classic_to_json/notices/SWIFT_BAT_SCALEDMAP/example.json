@@ -1,0 +1,26 @@
+{
+  "mission": "SWIFT",
+  "instrument": "BAT",
+  "id": [
+    1230423
+  ],
+  "trigger_time": "2024-05-23T14:43:11.900Z",
+  "ra": 10.916400000000001,
+  "dec": 14.3419,
+  "rate_snr": 8.540000000000001,
+  "alert_type": "initial",
+  "latitude": 8.9,
+  "longitude": 279.27,
+  "foreground_duration": 4.095,
+  "image_duration": null,
+  "rate_duration": 4.096,
+  "image_snr": 8.5,
+  "grb_status": "It is a GRB",
+  "point_source": true,
+  "flaring_known_source": false,
+  "star_tracker_status": "locked",
+  "bright_star_nearby": false,
+  "originally_subtresh": false,
+  "removed_from_catalog": false,
+  "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/sw01230423000msbsm.fits"
+}

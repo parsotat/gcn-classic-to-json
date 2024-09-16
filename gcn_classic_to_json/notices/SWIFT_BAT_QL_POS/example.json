@@ -1,0 +1,18 @@
+{
+  "mission": "SWIFT",
+  "instrument": "BAT",
+  "id": [
+    1227767
+  ],
+  "trigger_time": "2024-05-11T18:06:53.340Z",
+  "ra": 336.66450000000003,
+  "dec": 8.5135,
+  "rate_snr": 14.89,
+  "latitude": -11.14,
+  "longitude": 151.31,
+  "ra_dec_error": 0.05,
+  "roll": 0.0,
+  "trigger_index": 262,
+  "merit_value": 100.0,
+  "additional_info": "This burst is worthy of becoming the new Automated target.This burst is of sufficient merit to request a s/c slew."
+}

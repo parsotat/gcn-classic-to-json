@@ -1,0 +1,28 @@
+{
+  "mission": "SWIFT",
+  "instrument": "BAT",
+  "id": [
+    99999
+  ],
+  "trigger_time": "2024-05-12T07:26:09.000Z",
+  "ra": 180.0,
+  "dec": -35.0,
+  "rate_snr": 16.78,
+  "alert_tense": "test",
+  "ra_dec_error": 0.05,
+  "instrument_phi": 123.54,
+  "instrument_theta": 12.34,
+  "image_duration": null,
+  "rate_duration": 0.064,
+  "image_snr": 12.98,
+  "n_events": 1000,
+  "image_peak": 500,
+  "background_events": 100,
+  "background_start_time": "2024-05-12T07:25:42.000Z",
+  "backgroun_duration": 12.0,
+  "trigger_index": 12,
+  "grb_status": "It is a GRB",
+  "point_source": true,
+  "flaring_known_source": false,
+  "bright_star_nearby": false
+}

@@ -1,0 +1,39 @@
+{
+  "mission": "SWIFT",
+  "instrument": "BAT",
+  "id": [
+    1236151
+  ],
+  "trigger_time": "2024-06-10T07:36:36.410Z",
+  "ra": 117.1755,
+  "dec": -67.804,
+  "rate_snr": 7.54,
+  "ra_dec_error": 0.05,
+  "instrument_phi": 0.6051000000000001,
+  "instrument_theta": 0.1106,
+  "latitude": -11.02,
+  "longitude": 68.08,
+  "trigger_type": "rate",
+  "image_duration": null,
+  "image_energy_range": null,
+  "rate_duration": 2.048,
+  "rate_energy_range": [
+    15,
+    25
+  ],
+  "image_snr": 6.59,
+  "n_events": 2700,
+  "image_peak": 127,
+  "background_events": 26505,
+  "background_start_time": "2024-06-10T07:35:58.390Z",
+  "backgroun_duration": 24.0,
+  "trigger_index": 244,
+  "catalog_number": 10324,
+  "grb_status": "It is probably not a GRB or transient due to low image significance",
+  "point_source": true,
+  "flaring_known_source": true,
+  "star_tracker_status": "locked",
+  "bright_star_nearby": false,
+  "temporal_coincidence": false,
+  "spatial_coincidence": false
+}
