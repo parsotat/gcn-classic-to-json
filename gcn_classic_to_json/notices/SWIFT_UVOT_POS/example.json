@@ -1,0 +1,25 @@
+{
+  "id": [
+    1231488
+  ],
+  "alert_tense": "current",
+  "alert_type": "initial",
+  "trigger_time": "2024-05-29T03:00:36.000Z",
+  "ra": 335.3585,
+  "dec": 51.562000000000005,
+  "ra_dec_error": 0.0003055555555555556,
+  "systematic_included": true,
+  "filter": [
+    "White"
+  ],
+  "magnitide": 17.84,
+  "magnitude_error": 0.4,
+  "point_source": false,
+  "catalog_source": false,
+  "ground_catalog_source": false,
+  "spatial_coincidence": false,
+  "temporal_coincidence": false,
+  "bright_star_nearby": false,
+  "updated_position": false,
+  "ground_generated": true
+}

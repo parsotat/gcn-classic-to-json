@@ -1,0 +1,30 @@
+{
+  "mission": "SWIFT",
+  "id": [
+    1228797
+  ],
+  "record_number": 1,
+  "alert_type": "initial",
+  "trigger_time": "2024-05-16T03:35:54.540Z",
+  "ra": 212.8069,
+  "dec": -63.4878,
+  "roll": 194.42100000000002,
+  "latitude": 16.72,
+  "longitude": 228.03,
+  "merit_value": 100.0,
+  "grb_status": "It is not a GRB",
+  "point_source": false,
+  "flaring_known_source": false,
+  "star_tracker_status": "locked",
+  "bright_star_nearby": false,
+  "removed_from_catalog": false,
+  "galaxy_nearby": false,
+  "trigger_index": 0,
+  "trigger_type": "rate",
+  "image_duration": null,
+  "rate_duration": 0.0,
+  "rate_snr": 0.0,
+  "image_snr": null,
+  "new_automated_target": true,
+  "sufficient_merit": true
+}

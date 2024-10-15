@@ -1,0 +1,25 @@
+{
+  "id": [
+    1227767
+  ],
+  "trigger_time": "2024-05-11T18:08:43.660Z",
+  "ra_pointing": 336.6701,
+  "dec_pointing": 8.5244,
+  "roll": 73.6558,
+  "filter": [
+    "White"
+  ],
+  "background_mean": 0.36300000000000004,
+  "image_max": [
+    1407,
+    1589
+  ],
+  "n_stars": 18,
+  "image_offset": [
+    448,
+    630
+  ],
+  "detector_threshold": 16,
+  "photometry_threshold": 9,
+  "fits_file_url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/sw01227767000msufc0110.fits"
+}

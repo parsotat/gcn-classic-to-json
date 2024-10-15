@@ -1,0 +1,16 @@
+{
+  "mission": "SWIFT",
+  "id": [
+    97524
+  ],
+  "record_number": [
+    5
+  ],
+  "trigger_time": "2024-05-10T07:59:28.960Z",
+  "ra_pointing": 74.5428,
+  "dec_pointing": -52.065000000000005,
+  "roll": 329.2339,
+  "latitude": -5.44,
+  "longitude": 88.60000000000001,
+  "bright_star_nearby": false
+}

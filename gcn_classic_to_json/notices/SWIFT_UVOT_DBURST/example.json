@@ -1,0 +1,31 @@
+{
+  "id": [
+    1227767
+  ],
+  "trigger_time": "2024-05-11T18:08:43.660Z",
+  "ra_pointing": 336.6701,
+  "dec_pointing": 8.5244,
+  "roll": 73.6558,
+  "filter": [
+    "White"
+  ],
+  "exposure_ID": 737143757,
+  "image_offset": [
+    826,
+    950
+  ],
+  "image_size": [
+    160,
+    160
+  ],
+  "grb_position": [
+    986,
+    1110
+  ],
+  "n_frames": 13575,
+  "fits_file_url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/sw01227767000msuni0144.fits",
+  "pixel_binning": "2x2",
+  "bright_star_nearby": false,
+  "originally_subtresh": false,
+  "grb_position_source": "XRT Position"
+}

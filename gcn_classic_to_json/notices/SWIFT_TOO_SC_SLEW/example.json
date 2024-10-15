@@ -1,0 +1,35 @@
+{
+  "id": [
+    1228797
+  ],
+  "record_number": [
+    1
+  ],
+  "alert_type": "initial",
+  "trigger_time": "2024-05-16T03:35:54.540Z",
+  "ra": 212.8069,
+  "dec": -63.4878,
+  "roll": 194.42100000000002,
+  "latitude": 2.25,
+  "longitude": 295.86,
+  "wait_time": 19.0,
+  "observation_time": 0.0,
+  "grb_status": "It is not a GRB",
+  "point_source": false,
+  "flaring_known_source": false,
+  "star_tracker_status": "locked",
+  "bright_star_nearby": false,
+  "removed_from_catalog": false,
+  "galaxy_nearby": false,
+  "trigger_index": 0,
+  "merit_value": 100.0,
+  "trigger_type": "rate",
+  "image_duration": null,
+  "rate_duration": 0.0,
+  "rate_snr": 0.0,
+  "image_snr": null,
+  "slew_return_code": "The slew will not be executed. Earth_limb constraint.",
+  "bat_mode": "0x0",
+  "xrt_mode": "0x7",
+  "uvot_mode": "0x8000"
+}

@@ -1,0 +1,22 @@
+{
+  "mission": "SWIFT",
+  "id": [
+    97317
+  ],
+  "record_number": [
+    2
+  ],
+  "trigger_time": "2024-05-09T23:16:00.000Z",
+  "ra_pointing": 213.1096,
+  "dec_pointing": 47.3553,
+  "roll": 342.3806,
+  "latitude": 14.19,
+  "longitude": 16.12,
+  "bright_star_nearby": false,
+  "bat_mode": "0x0",
+  "xrt_mode": "0x7",
+  "uvot_mode": "0x18c",
+  "observation_time": 360.0,
+  "merit_value": 51.0,
+  "target_name": "URAT1-687234652 "
+}
