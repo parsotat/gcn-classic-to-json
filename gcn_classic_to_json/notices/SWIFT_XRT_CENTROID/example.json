@@ -1,0 +1,23 @@
+{
+  "mission": "SWIFT",
+  "instrument": "XRT",
+  "id": [
+    1230423
+  ],
+  "alert_type": "initial",
+  "trigger_time": "2024-05-23T14:45:39.620Z",
+  "ra_pointing": 33.5586,
+  "dec_pointing": -22.0274,
+  "centroid_counts": 10,
+  "min_counts": 20,
+  "centroid_std": 0.0,
+  "sig_max": 0.0079,
+  "phase2_iter": 1,
+  "max_iter": 4,
+  "error_flag": "No source found in image",
+  "pos_out_of_range": false,
+  "bright_star_nearby": false,
+  "sper_data_used": false,
+  "originally_subtresh": false,
+  "too_sequence_uploaded": false
+}

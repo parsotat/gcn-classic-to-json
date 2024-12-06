@@ -1,0 +1,36 @@
+{
+  "id": [
+    1227767
+  ],
+  "alert_type": "initial",
+  "alert_tense": "current",
+  "observation_start": "2024-05-11T18:08:36.420Z",
+  "ra": 336.6725,
+  "dec": 8.511800000000001,
+  "ra_dec_error": 0.0013611111111111111,
+  "systematic_included": true,
+  "trigger_type": "image",
+  "energy_flux": 3.70007e-09,
+  "image_snr": 11.61,
+  "tam_pos_1": [
+    327.71,
+    237.14000000000001
+  ],
+  "tam_pos_2": [
+    261.66,
+    243.88
+  ],
+  "amplifier": 2,
+  "waveform": 134,
+  "xrt_bat_theta": 0.008,
+  "cosmic_ray_possibility": false,
+  "originally_subtresh": false,
+  "spatial_coincidence": false,
+  "temporal_coincidence": false,
+  "not_real_astrophysical_peak": false,
+  "pos_out_of_range": false,
+  "bright_star_nearby": false,
+  "low_xrt_bat_theta": false,
+  "uploaded_too_sequence": false,
+  "updated_position": false
+}

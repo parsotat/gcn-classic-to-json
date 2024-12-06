@@ -1,0 +1,15 @@
+{
+  "id": [
+    1230423
+  ],
+  "observation_start": "2024-05-23T14:45:37.100Z",
+  "ra": 33.5586,
+  "dec": -22.0274,
+  "observation_livetime": 2.507,
+  "observation_end": "2024-05-23T14:45:42.110Z",
+  "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/sw01230423000msxim_rw.img",
+  "pos_out_of_range": false,
+  "originally_subtresh": false,
+  "too_sequence_uploaded": false,
+  "watchdog_timeout": false
+}

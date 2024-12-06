@@ -1,0 +1,23 @@
+{
+  "id": [
+    1227767
+  ],
+  "observation_start": "2024-05-11T18:08:41.570Z",
+  "ra": 336.6702,
+  "dec": 8.5245,
+  "observation_livetime": 1.37,
+  "observation_end": "2024-05-11T18:08:42.630Z",
+  "mode": "Low Rate Photodiode",
+  "waveform": 82,
+  "bias": 0,
+  "termination_condition": "Spectrum generated at the LRPD-to-WT transition",
+  "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/sw01227767000msxlr.pha",
+  "pos_out_of_range": false,
+  "bright_star_nearby": false,
+  "originally_subtresh": false,
+  "too_sequence_uploaded": false,
+  "watchdog_timeout": false,
+  "first_packet_missing": false,
+  "second_packet_missing": false,
+  "third_packet_missing": false
+}

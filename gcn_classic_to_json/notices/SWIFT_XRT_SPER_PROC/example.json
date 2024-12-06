@@ -1,0 +1,15 @@
+{
+  "id": [
+    1227767
+  ],
+  "observation_start": "2024-05-11T18:14:30.160Z",
+  "ra": 336.671,
+  "dec": 8.5228,
+  "observation_livetime": 117.843,
+  "observation_end": "2024-05-11T18:16:30.510Z",
+  "num_packets": 47,
+  "num_events": 194,
+  "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/sw01227767000msxpc_uf.evt",
+  "too_sequence_uploaded": false,
+  "watchdog_timeout": true
+}
