@@ -11,7 +11,7 @@ astropy = "*"
 click = "^8.1.7"
 gcn-kafka = "^0.3.3"
 numpy = "*"
-prometheus-client = "^0.21.0"
+prometheus-client = "^0.21.1"
 python = "^3.9"
 pygcn = "^1.1.3"
 
