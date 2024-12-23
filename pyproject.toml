@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 astropy = "*"
-click = "^8.1.7"
+click = "^8.1.8"
 gcn-kafka = "^0.3.3"
 numpy = "*"
 prometheus-client = "^0.21.1"
