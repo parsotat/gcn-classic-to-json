@@ -23,8 +23,8 @@ def parse(key, value):
     ints[1]  # Unused. According to docs: 'Generally set to 1.'
     ints[2]  # Unused. According to docs: 'hopcount item is defunct'.
     ints[3]  # Unused. According to docs: 'seconds of day when packet was created'.
-    assert (
-        ints[-1] == np.asarray("\0\0\0\n", dtype="c").view(">i4")[0]
-    ), "Field 39 must be a newline"
+    assert ints[-1] == np.asarray("\0\0\0\n", dtype="c").view(">i4")[0], (
+        "Field 39 must be a newline"
+    )
     parser = _parsers[key]
     return parser(ints)
