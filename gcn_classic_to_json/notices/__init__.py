@@ -23,13 +23,16 @@ def parse(value):
     #get the actual notice type if we dont know it
     key=[i for i in NoticeType if i.value==ints[0] ]
     assert key != None, f"There is no associated notice type for packet type {ints[0]}"
+    assert len(key) == 1, f"There are multiple associated notice type for packet type {ints[0]}"
     
-    assert ints[0] == NoticeType[key], "Field 0 must equal the notice type"
+    key=key[0]
+    
+    assert ints[0] == NoticeType[key.name], "Field 0 must equal the notice type"
     ints[1]  # Unused. According to docs: 'Generally set to 1.'
     ints[2]  # Unused. According to docs: 'hopcount item is defunct'.
     ints[3]  # Unused. According to docs: 'seconds of day when packet was created'.
     assert ints[-1] == np.asarray("\0\0\0\n", dtype="c").view(">i4")[0], (
         "Field 39 must be a newline"
     )
-    parser = _parsers[key]
+    parser = _parsers[key.name]
     return parser(ints)
