@@ -3,6 +3,7 @@ import pkgutil
 
 import numpy as np
 from gcn import NoticeType
+import logging
 
 _parsers = {
     module: importlib.import_module(f".{module}", __package__).parse
@@ -22,8 +23,9 @@ def parse(value):
     
     #get the actual notice type if we dont know it
     key=[i for i in NoticeType if i.value==ints[0] ]
+
     assert key != None, f"There is no associated notice type for packet type {ints[0]}"
-    assert len(key) == 1, f"There are multiple associated notice type for packet type {ints[0]}"
+    assert len(key) == 1, f"There are multiple or No associated notice type for packet type {ints[0]}"
     
     key=key[0]
     
@@ -34,5 +36,9 @@ def parse(value):
     assert ints[-1] == np.asarray("\0\0\0\n", dtype="c").view(">i4")[0], (
         "Field 39 must be a newline"
     )
+
+    logging.info(f'Identified packet as a {key.name} type notice.')
+
+
     parser = _parsers[key.name]
     return parser(ints)
