@@ -13,12 +13,17 @@ keys = tuple(_parsers.keys())
 
 
 def _frombuffer(value):
-    return np.frombuffer(value, dtype=">i4")
+    return np.frombuffer(value, dtype="<i4")
 
 
-def parse(key, value):
+def parse(value):
     ints = _frombuffer(value)
     assert len(ints) == 40
+    
+    #get the actual notice type if we dont know it
+    key=[i for i in NoticeType if i.value==ints[0] ]
+    assert key != None, f"There is no associated notice type for packet type {ints[0]}"
+    
     assert ints[0] == NoticeType[key], "Field 0 must equal the notice type"
     ints[1]  # Unused. According to docs: 'Generally set to 1.'
     ints[2]  # Unused. According to docs: 'hopcount item is defunct'.
