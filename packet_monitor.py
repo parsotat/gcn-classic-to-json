@@ -9,8 +9,9 @@ from pathlib import Path
 import logging
 import time
 import os
-import json 
-from . import notices
+import json
+from gcn_classic_to_json import notices
+from gcn_classic_to_json.json import dumps
 
 
 def cli():

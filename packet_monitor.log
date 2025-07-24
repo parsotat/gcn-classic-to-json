@@ -1,0 +1,4 @@
+2025-07-24 13:04:26,587 - INFO - packet monitor starting.
+2025-07-24 13:04:26,588 - INFO - The data directory that will be monitored is: gcn_classic_to_json/test.
+2025-07-24 13:04:26,588 - INFO - Set sleep_time to 1 second.
+2025-07-24 13:04:26,588 - INFO - Packet monitor converting gcn_classic_to_json/test/test_notices.py to json.
