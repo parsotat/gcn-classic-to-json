@@ -9,8 +9,8 @@ from pathlib import Path
 import logging
 import time
 import os
-
-import notices
+import json 
+from . import notices
 
 
 def cli():
