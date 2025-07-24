@@ -43,7 +43,7 @@ def parse_uvot_image(bin):
         "fits_file_url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{utils.binary_to_string(bin[22:39])}",
         "pixel_binning": pixel_binning_values[pixel_binning[0]],
         "bright_star_nearby": bool(misc_bits[13]),
-        "originally_subtresh": bool(misc_bits[20]),
+        "was_subthresh": bool(misc_bits[20]),
         "grb_position_source": grb_position_sources[misc_bits[28]],
     }
 

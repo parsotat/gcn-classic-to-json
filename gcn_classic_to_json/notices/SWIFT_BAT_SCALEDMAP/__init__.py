@@ -8,9 +8,7 @@ start_tracker_status = ["locked", "not locked"]
 
 def parse(bin):
     bin[9:14]  # Unused. According to docs: '20 bytes for the future'
-    bin[
-        17
-    ]  # Unused. According to docs: 'trig_index. This field is not yet (if ever) assigned.'
+    bin[17]  # Unused. According to docs: 'trig_index. This field is not yet (if ever) assigned.'
     bin[19]  # Unused. Flags are either internal or equivalent to bin[18]
 
     integ_time = bin[15] * 4 / 1000  # misc_bit has to be defined
@@ -54,7 +52,7 @@ def parse(bin):
         "flaring_known_source": bool(soln_status_bits[2]),
         "star_tracker_status": start_tracker_status[soln_status_bits[10]],
         "bright_star_nearby": bool(soln_status_bits[13]),
-        "originally_subtresh": bool(soln_status_bits[14]),
+        "was_subthresh": bool(soln_status_bits[14]),
         "removed_from_catalog": bool(soln_status_bits[15]),
         "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/"
         + utils.binary_to_string(bin[22:39]),

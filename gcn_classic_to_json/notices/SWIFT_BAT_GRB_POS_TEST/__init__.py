@@ -35,7 +35,7 @@ def parse(bin):
         "image_peak": bin[10],
         "background_events": bin[22],
         "background_start_time": utils.datetime_to_iso8601(bin[5], bin[23]),
-        "backgroun_duration": bin[24] * 1e-2,
+        "background_duration": bin[24] * 1e-2,
         "trigger_index": bin[17],
         "grb_status": grb_status[soln_status_bits[1]],
         "point_source": bool(soln_status_bits[0]),

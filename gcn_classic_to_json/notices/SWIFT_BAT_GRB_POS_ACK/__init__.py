@@ -55,7 +55,7 @@ def parse(bin):
     else:
         grb_status = "It is not a GRB"
 
-    calalog_num = bin[25]
+    catalog_num = bin[25]
 
     energy_range_idx = np.flip(bin[37:38].view(dtype="i1"))[0]
     energy_range = energy_ranges[energy_range_idx]
@@ -80,15 +80,15 @@ def parse(bin):
         "image_peak": bin[10],
         "background_events": bin[22],
         "background_start_time": utils.datetime_to_iso8601(bin[5], bin[23]),
-        "backgroun_duration": bin[24] * 1e-2,
+        "background_duration": bin[24] * 1e-2,
         "trigger_index": bin[17],
-        "catalog_number": calalog_num if soln_status_bits[3] else None,
+        "catalog_number": catalog_num if soln_status_bits[3] else None,
         "grb_status": grb_status,
         "point_source": bool(soln_status_bits[0]),
         "flaring_known_source": bool(soln_status_bits[2]),
         "star_tracker_status": start_tracker_status[soln_status_bits[10]],
         "bright_star_nearby": bool(soln_status_bits[13]),
-        "originally_subtresh": bool(soln_status_bits[14]),
+        "was_subthresh": bool(soln_status_bits[14]),
         "removed_from_catalog": bool(soln_status_bits[15]),
         "galaxy_nearby": bool(soln_status_bits[16]),
         "temporal_coincidence": bool(soln_status_bits[28]),

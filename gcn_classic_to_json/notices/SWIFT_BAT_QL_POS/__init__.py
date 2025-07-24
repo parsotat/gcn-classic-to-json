@@ -18,7 +18,7 @@ def parse(bin):
         1: "This burst is of sufficient merit to request a s/c slew.",
     }
 
-    comments = "".join(
+    comments = "\n".join(
         [val for (key, val) in at_slew_flag_descriptions.items() if (at_slew_bits[key])]
     )
 
