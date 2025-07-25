@@ -63,7 +63,7 @@ def main(args):
         raise NotImplementedError
 
     #setup the logger
-    logging.basicConfig(filename=logdir.joinpath(args.logname), level=logging.INFO,
+    logging.basicConfig(filename=logdir.joinpath(args.logname), 
                         format='%(asctime)s - %(levelname)s - %(message)s')
 
     #print something out
