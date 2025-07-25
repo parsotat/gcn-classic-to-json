@@ -82,6 +82,9 @@ def main(args):
         #look for files in the datadir, sort by time
         binary_packets = sorted(datadir.iterdir(), key=os.path.getmtime, reverse=True)
 
+        #exclude non-swift binary packets, see save_swift function in hete.c
+        binary_packets = [i for i in binary_packets if "S" in i.name]
+
         #exclude any packets with .json in the name or those that have .json counterparts
         binary_packets=[i for i in binary_packets if "json" not in i.name and not (i.parent.joinpath(f"{i.name}.json").exists())]
 
