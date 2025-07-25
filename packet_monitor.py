@@ -74,6 +74,8 @@ def main(args):
     sleep_time=1
     logging.info(f"Set sleep_time to {sleep_time} second.")
 
+    #initalize this to false
+    was_converted=False
 
     #now start to do a loop
     while True:
@@ -95,9 +97,25 @@ def main(args):
                 json_conversion_file=packet.parent.joinpath(f"{packet.name}.json")
                 if not json_conversion_file.exists():
                     logging.info(f'Packet monitor converting {packet} to json.')
-                    convert_notice(packet, json_conversion_file)
 
-                    if args.send_json:
+                    #try to do the conversion but catch any errors and print them and move onto the next binary packet.
+                    # if we raised an exception in this packet, then dont try to send anything
+                    try:
+                        convert_notice(packet, json_conversion_file)
+                        was_converted=True
+                    except Exception as e:
+                        logging.debug(e)
+                        logging.debug(f"Unable to convert {packet} to json. Moving onto the next packet.")
+                        # want to remove a potential json conversion so this packet can be requeued in the
+                        # next iteration of the while loop
+                        if json_conversion_file.exists():
+                            json_conversion_file.unlink()
+                            logging.debug(f"File {json_conversion_file} deleted successfully.")
+                        else:
+                            logging.debug(f"File {json_conversion_file} was not created.")
+
+
+                    if args.send_json and was_converted:
                         #do something to actually send it off to gcn over kafka
                         raise NotImplementedError
 
@@ -105,7 +123,6 @@ def main(args):
             logging.info(f"Set sleep_time to {sleep_time} second.")
 
         time.sleep(sleep_time)
-
 
     return 0
 
