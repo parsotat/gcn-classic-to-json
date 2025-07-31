@@ -14,10 +14,8 @@ slew_return_options = [
 
 
 def parse_slew(bin):
-    id_record_number_bits = np.flip(np.unpackbits(bin[4:5].view(dtype="u1")))
-    record_number = np.packbits(np.flip(id_record_number_bits[24:]))
-    id = id_record_number_bits[:24].dot(2 ** np.arange(24))
-
+    id, record_num = utils.breakdown_obsnum(bin[4:5])
+    
     lat, lon = bin[10:11].view(dtype="<i2")
 
     integ_time = bin[15] * 4 / 1000
