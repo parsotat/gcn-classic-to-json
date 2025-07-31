@@ -11,11 +11,11 @@ def parse(bin):
 
     lat, lon = bin[10:11].view("<i2")
 
-    at_slew_bits = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
+    at_slew_bits = [(bin[18:19] >> 1) &1, bin[18:19] & 1]
 
     at_slew_flag_descriptions = {
-        0: "This burst is worthy of becoming the new Automated target.",
-        1: "This burst is of sufficient merit to request a s/c slew.",
+        0: "This burst is of sufficient merit to request a s/c slew.",
+        1: "This burst is worthy of becoming the new Automated target.",
     }
 
     comments = "\n".join(
