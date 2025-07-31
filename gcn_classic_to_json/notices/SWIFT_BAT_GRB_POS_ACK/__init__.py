@@ -27,7 +27,7 @@ def parse(bin):
 
     integ_time = bin[14] * 4 / 1000
 
-    lat, lon = bin[16:17].view(">i2")
+    lat, lon = bin[16:17].view("<i2")
 
     soln_status_bits = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
     soln_status_bits[8]  # Unused. According to docs: 'ground_catalog_source'.

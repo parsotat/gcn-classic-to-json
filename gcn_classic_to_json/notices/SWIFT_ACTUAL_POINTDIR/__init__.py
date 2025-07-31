@@ -8,7 +8,7 @@ def parse_pointdir(bin):
     record_number = np.packbits(np.flip(id_record_number_bits[24:]))
     id = id_record_number_bits[:24].dot(2 ** np.arange(24))
 
-    lat, lon = bin[16:17].view(dtype=">i2")
+    lat, lon = bin[16:17].view(dtype="<i2")
 
     soln_status_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
     return {

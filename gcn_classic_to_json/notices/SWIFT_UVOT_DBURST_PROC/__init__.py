@@ -23,7 +23,7 @@ grb_position_sources = ["Window Position", "XRT Position"]
 
 
 def parse_uvot_image(bin):
-    y_pos, x_pos = bin[16:17].view(dtype=">i2")
+    y_pos, x_pos = bin[16:17].view(dtype="<i2")
 
     misc_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
     pixel_binning = np.packbits(np.pad(np.flip(misc_bits[:5]), (3, 0)))

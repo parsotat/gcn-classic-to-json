@@ -13,7 +13,7 @@ def parse(bin):
 
     integ_time = bin[15] * 4 / 1000  # misc_bit has to be defined
 
-    lat, lon = bin[16:17].view(">i2")
+    lat, lon = bin[16:17].view("<i2")
 
     soln_status_bits = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
 

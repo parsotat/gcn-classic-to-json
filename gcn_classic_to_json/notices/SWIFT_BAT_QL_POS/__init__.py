@@ -9,7 +9,7 @@ def parse(bin):
     bin[20]  # Unused. According to docs: '4 bytes for the future'
     bin[22:38]  # Unused. According to docs: '64 bytes for the future'
 
-    lat, lon = bin[10:11].view(">i2")
+    lat, lon = bin[10:11].view("<i2")
 
     at_slew_bits = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
 

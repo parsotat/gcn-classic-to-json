@@ -35,7 +35,7 @@ def parse(bin):
 
     integ_time = bin[15] * 4 / 1000
 
-    lat, lon = bin[16:17].view(">i2")
+    lat, lon = bin[16:17].view("<i2")
 
     return {
         **parse_swift_bat(bin),

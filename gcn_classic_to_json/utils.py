@@ -1,6 +1,8 @@
 import numpy as np
 from astropy.time import Time
+import logging
 
+log = logging.getLogger(__name__)
 
 def datetime_to_iso8601(date, time):
     """Converts time to ISO 8601 format.
@@ -56,3 +58,33 @@ def binary_to_string(binary):
         .strip(b"\0")
         .decode()
     )
+
+def breakdown_obsnum(binary_value):
+    """
+    This function takes the obsnum part of a binary packet and converts it into the target ID and the segment number
+    """
+    target_id = None
+    segment = None
+
+    try:
+        target_id=(binary_value & 0xFFFFFF).view(dtype="u4")
+        if len(target_id)==1:
+            target_id=target_id[0]
+        else:
+            logging.debug(f'There were more than 1 target IDs obtained from the binary packet obsnum')
+    except Exception as e:
+        logging.debug(f'{e}')
+        logging.debug(f'Error obtaining the target ID from the binary packet obsnum')
+
+    try:
+        segment=(binary_value >> 24 & 0xFF).view(dtype="u4")
+        if len(segment)==1:
+            segment=segment[0]
+        else:
+            logging.debug(f'There were more than 1 segments obtained from the binary packet obsnum')
+    except Exception as e:
+        logging.debug(f'{e}')
+        logging.debug(f'Error obtaining the segment number from the binary packet obsnum')
+
+
+    return target_id, segment
