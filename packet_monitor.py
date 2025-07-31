@@ -88,6 +88,8 @@ def main(args):
         #exclude any packets with .json in the name or those that have .json counterparts
         binary_packets=[i for i in binary_packets if "json" not in i.name and not (i.parent.joinpath(f"{i.name}.json").exists())]
 
+        #TODO: exclude any packets that dont have a counterpart in the gcn NoticeTypes
+
         #iterate through the files and produce the json files
         #exclude any binary packets that have already been dealt with. ie they have a name with .json appended
         # these also will be below any packets that are brand new so not super critical

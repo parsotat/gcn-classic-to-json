@@ -15,7 +15,7 @@ slew_return_options = [
 
 def parse_slew(bin):
     id, record_num = utils.breakdown_obsnum(bin[4:5])
-    
+
     lat, lon = bin[10:11].view(dtype="<i2")
 
     integ_time = bin[15] * 4 / 1000
