@@ -3,7 +3,7 @@ import numpy as np
 from ... import utils
 from ..SWIFT_BAT_GRB_POS_ACK import parse_swift_bat
 
-start_tracker_status = ["locked", "not locked"]
+star_tracker_status = ["locked", "not locked"]
 
 
 def parse(bin):
@@ -50,7 +50,7 @@ def parse(bin):
         "grb_status": grb_status,
         "point_source": bool(soln_status_bits[0]),
         "flaring_known_source": bool(soln_status_bits[2]),
-        "star_tracker_status": start_tracker_status[soln_status_bits[10]],
+        "star_tracker_status": star_tracker_status[soln_status_bits[10]],
         "bright_star_nearby": bool(soln_status_bits[13]),
         "was_subthresh": bool(soln_status_bits[14]),
         "removed_from_catalog": bool(soln_status_bits[15]),

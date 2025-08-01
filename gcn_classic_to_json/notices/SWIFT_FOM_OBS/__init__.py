@@ -2,7 +2,7 @@ import numpy as np
 
 from ... import utils
 
-start_tracker_status = ["locked", "not locked"]
+star_tracker_status = ["locked", "not locked"]
 
 
 def parse_fom(bin):
@@ -55,7 +55,7 @@ def parse_fom(bin):
         "grb_status": grb_status,
         "point_source": bool(soln_status_bits[0]),
         "flaring_known_source": bool(soln_status_bits[2]),
-        "star_tracker_status": start_tracker_status[soln_status_bits[10]],
+        "star_tracker_status": star_tracker_status[soln_status_bits[10]],
         "bright_star_nearby": bool(soln_status_bits[13]),
         "removed_from_catalog": bool(soln_status_bits[15]),
         "galaxy_nearby": bool(soln_status_bits[16]),
