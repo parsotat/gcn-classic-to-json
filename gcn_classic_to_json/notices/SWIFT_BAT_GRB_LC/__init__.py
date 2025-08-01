@@ -38,6 +38,7 @@ def parse(bin):
 
     lat, lon = bin[16:17].view("<i2")
 
+
     return {
         **parse_swift_bat(bin),
         "latitude": lat * 1e-2,

@@ -48,7 +48,11 @@ def parse(bin):
 
     catalog_num = bin[25]
 
-    energy_range_idx = np.flip(bin[37:38].view(dtype="i1"))[0]
+    #bins 36 onwards are assigned on a byte, by byte basis, and there are 9 bytes that are assigned via s_t_r
+    merit_bytes=bin[36:].view(dtype="i1")
+
+    #the energyrange is given by the 4th index of the extracted bytes
+    energy_range_idx = merit_bytes[4]
     energy_range = energy_ranges[energy_range_idx]
 
     return {
