@@ -8,7 +8,8 @@ def parse_pointdir(bin):
 
     lat, lon = bin[16:17].view(dtype="<i2")
 
-    soln_status_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
+    soln_status_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
+
     return {
         "mission": "SWIFT",
         "id": [id],

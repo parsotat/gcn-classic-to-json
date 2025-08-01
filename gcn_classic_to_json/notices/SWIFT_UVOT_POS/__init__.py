@@ -27,9 +27,10 @@ def parse(bin):
     ]  # Unused. According to Docs : 'angular distance between XRT and UVOT but set to 0'
     bin[22:39]  # Spare. According to Docs: '68 bytes for the future'
 
-    soln_status = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
+    soln_status = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
 
-    misc_status = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
+
+    misc_status = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
         "id": [bin[4]],

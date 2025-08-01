@@ -15,7 +15,8 @@ def parse(bin):
 
     lat, lon = bin[16:17].view("<i2")
 
-    soln_status_bits = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
+    soln_status_bits = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
+
 
     if soln_status_bits[11]:
         grb_status = (

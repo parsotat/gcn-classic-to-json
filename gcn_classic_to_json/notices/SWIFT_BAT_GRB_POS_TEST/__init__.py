@@ -16,7 +16,8 @@ def parse(bin):
 
     integ_time = bin[14] * 4 / 1000
 
-    soln_status_bits = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
+    soln_status_bits = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
+
     soln_status_bits[8]  # Unused. According to docs: 'ground_catalog_source'.
     soln_status_bits[12]  # Unused. According to docs: 'blocked_catalog_source'.
     # These seems to be cross-referenced with a ground catalog with the name of the source printed in the text notices.

@@ -11,7 +11,9 @@ def parse(bin):
     # However in practise these notices seem to be created only for Swift-XRT and the energy is 0.3-10 keV for all text notices.
     bin[13]  # Intentionally Omitted. According to Docs: 'Seeing during the observation'
 
-    misc_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
+    misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
+
+
 
     spectrum = None
     unit = None
@@ -29,7 +31,7 @@ def parse(bin):
         10, np.packbits(np.flip(misc_bits[24:])).view(dtype="i1")
     )[0]
 
-    trig_id = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
+    trig_id = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
 
     return {
         "ref_ID": [bin[4]],

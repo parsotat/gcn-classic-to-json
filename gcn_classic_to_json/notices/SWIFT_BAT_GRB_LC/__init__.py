@@ -10,7 +10,8 @@ def parse(bin):
     bin[9:12]  # Unused. According to docs: '12 bytes for the future'
     bin[19]  # Unused. Flags are either internal or equivalent to bin[18]
 
-    soln_status_bits = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
+    soln_status_bits = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
+
 
     if soln_status_bits[11]:
         grb_status = (

@@ -20,7 +20,8 @@ def parse_slew(bin):
 
     integ_time = bin[15] * 4 / 1000
 
-    soln_status_bits = np.flip(np.unpackbits(bin[16:17].view(dtype="u1")))
+    soln_status_bits = np.unpackbits(bin[16:17].view(np.uint8), bitorder='little')
+
     soln_status_bits[8]  # Unused. According to docs: 'ground_catalog_source'.
     soln_status_bits[12]  # Unused. According to docs: 'blocked_catalog_source'.
     if soln_status_bits[11]:

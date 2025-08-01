@@ -12,7 +12,8 @@ def parse_fom(bin):
 
     integ_time = bin[15] * 4 / 1000
 
-    soln_status_bits = np.flip(np.unpackbits(bin[16:17].view(dtype="u1")))
+    soln_status_bits = np.unpackbits(bin[16:17].view(np.uint8), bitorder='little')
+
     soln_status_bits[8]  # Unused. According to docs: 'ground_catalog_source'.
     soln_status_bits[12]  # Unused. According to docs: 'blocked_catalog_source'.
     if soln_status_bits[11]:
@@ -36,7 +37,7 @@ def parse_fom(bin):
     else:
         grb_status = "It is not a GRB"
 
-    at_slew_flags = np.flip(np.unpackbits(bin[18:19].view(dtype="u1")))
+    at_slew_flags = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
 
     image_snr = bin[20]
 
