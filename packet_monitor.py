@@ -10,6 +10,7 @@ import logging
 import time
 import os
 import json
+import numpy as np
 from gcn_classic_to_json import notices
 from gcn_classic_to_json.json import dumps
 
@@ -88,7 +89,10 @@ def main(args):
         #exclude any packets with .json in the name or those that have .json counterparts
         binary_packets=[i for i in binary_packets if "json" not in i.name and not (i.parent.joinpath(f"{i.name}.json").exists())]
 
-        #TODO: exclude any packets that dont have a counterpart in the gcn NoticeTypes
+        #exclude any packets that dont have a counterpart in the gcn NoticeTypes, need to loop over 2 things which isnt great
+        #first extrac the packet type and then compare them to the gcn NoticeTypes
+        binary_packet_num=[np.frombuffer(i.read_bytes(), dtype="<i4")[0] for i in binary_packets]
+        binary_packets=[i for i,pkt_num in zip(binary_packets,binary_packet_num) for j in NoticeType if j.value == pkt_num]
 
         #iterate through the files and produce the json files
         #exclude any binary packets that have already been dealt with. ie they have a name with .json appended
