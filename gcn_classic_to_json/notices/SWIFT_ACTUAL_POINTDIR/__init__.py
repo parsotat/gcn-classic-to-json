@@ -4,7 +4,7 @@ from ... import utils
 
 
 def parse_pointdir(bin):
-    id, record_num = utils.breakdown_obsnum(bin[4:5])
+    target_id, segment = utils.breakdown_obsnum(bin[4:5])
 
     lat, lon = bin[16:17].view(dtype="<i2")
 
@@ -12,8 +12,8 @@ def parse_pointdir(bin):
 
     return {
         "mission": "SWIFT",
-        "id": [id],
-        "record_number": record_number,
+        "id": [target_id],
+        "record_number": segment,
         "trigger_time": utils.datetime_to_iso8601(bin[5], bin[6]),
         "ra_pointing": bin[7] * 1e-4,
         "dec_pointing": bin[8] * 1e-4,

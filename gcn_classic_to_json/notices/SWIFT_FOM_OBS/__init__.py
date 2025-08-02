@@ -6,7 +6,7 @@ star_tracker_status = ["locked", "not locked"]
 
 
 def parse_fom(bin):
-    id, record_num = utils.breakdown_obsnum(bin[4:5])
+    target_id, segment = utils.breakdown_obsnum(bin[4:5])
 
     lat, lon = bin[10:11].view(dtype="<i2")
 
@@ -43,8 +43,8 @@ def parse_fom(bin):
 
     return {
         "mission": "SWIFT",
-        "id": [id],
-        "record_number": record_number[0],
+        "id": [target_id],
+        "record_number": segment,
         "alert_type": "retraction" if soln_status_bits[5] else "initial",
         "trigger_time": utils.datetime_to_iso8601(bin[5], bin[6]),
         "ra": bin[7] * 1e-4,
