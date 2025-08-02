@@ -33,7 +33,7 @@ def parse(value):
     ints[1]  # Unused. According to docs: 'Generally set to 1.'
     ints[2]  # Unused. According to docs: 'hopcount item is defunct'.
     ints[3]  # Unused. According to docs: 'seconds of day when packet was created'.
-    assert ints[-1] == np.asarray("\0\0\0\n", dtype="c").view("<i4")[0], (
+    assert ints[-1] == int.from_bytes("\n".encode("utf-32-le"), byteorder="little"), (
         "Field 39 must be a newline"
     )
 
