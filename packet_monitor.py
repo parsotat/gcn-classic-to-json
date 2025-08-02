@@ -11,6 +11,7 @@ import time
 import os
 import json
 import numpy as np
+from gcn import NoticeType
 from gcn_classic_to_json import notices
 from gcn_classic_to_json.json import dumps
 
