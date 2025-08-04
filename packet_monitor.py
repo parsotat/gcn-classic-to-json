@@ -16,6 +16,15 @@ from gcn_classic_to_json import notices
 from gcn_classic_to_json.json import dumps
 
 
+import signal
+
+def handler(signum, frame):
+    print("Packet_monnitor is exiting.")
+    exit(0)
+
+signal.signal(signal.SIGINT, handler)
+
+
 def cli():
     parser = argparse.ArgumentParser(description='Process 160 byte binary packets and convert to JSON.')
     parser.add_argument('--datadir', required=True, type=str, help='Directory where the 160 byte packets will be placed')
