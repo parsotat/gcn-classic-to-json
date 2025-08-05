@@ -17,12 +17,12 @@ mode_dict = {
 
 
 def parse_swift_xrt_image(bin):
-    gain_wave_mode_bits = np.unpackbits(bin[17:18].view(dtype="u1"))
-    waveform_id = np.packbits(gain_wave_mode_bits[-8:])
-    mode = np.packbits(gain_wave_mode_bits[-16:-8])
-    gain = np.packbits(gain_wave_mode_bits[-24:-16])
+    gain_wave_mode_bits = np.unpackbits(bin[17:18].view(dtype="u1"), bitorder='little')
+    waveform_id = np.packbits(gain_wave_mode_bits[:8])
+    mode = np.packbits(gain_wave_mode_bits[8:16])
+    gain = np.packbits(gain_wave_mode_bits[16:24])
 
-    misc_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
+    misc_bits =  np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
         "mission": "SWIFT",

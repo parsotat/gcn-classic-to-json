@@ -4,7 +4,7 @@ from ... import utils
 
 
 def parse_swift_xrt_sper(bin):
-    misc_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
+    misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
         "id": [bin[4]],

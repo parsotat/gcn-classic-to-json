@@ -16,7 +16,7 @@ def parse(bin):
 
     error_flag_val = bin[18]
 
-    misc_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
+    misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
         "mission": "SWIFT",

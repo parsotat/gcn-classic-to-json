@@ -24,9 +24,9 @@ termination_conditions_dict = {
 
 
 def parse_swift_xrt_spec(bin):
-    misc_bits = np.unpackbits(bin[19:20].view(dtype="u1"))
+    misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
-    termination_conditions_bits = np.unpackbits(bin[21:22].view(dtype="u1"))
+    termination_conditions_bits = np.unpackbits(bin[21:22].view(dtype="u1"), bitorder='little')
 
     return {
         "id": [bin[4]],
@@ -54,7 +54,7 @@ def parse(bin):
     bin[15:19]  # Spare. According to Docs: "16 bytes for the future"
     bin[20]  # Spare. According to Docs: "4 bytes for the future"
 
-    misc_bits = np.unpackbits(bin[19:20].view(dtype="u1"))
+    misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
         **parse_swift_xrt_spec(bin),

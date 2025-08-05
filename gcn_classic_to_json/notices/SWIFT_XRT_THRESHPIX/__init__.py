@@ -8,7 +8,7 @@ def parse(bin):
     bin[20:22]  # Spare. According to Docs: "8 bytes for the future".
     bin[12]  # Intentionally Omitted. seq_num but unused
 
-    misc_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
+    misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
         **parse_swift_xrt_thresh(bin),

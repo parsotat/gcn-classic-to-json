@@ -6,7 +6,7 @@ from ..SWIFT_XRT_SPER_PROC import parse_swift_xrt_sper
 def parse(bin):
     bin[13:19]  # Spare. According to Docs: "24 bytes for the future".
     bin[21]  # Spare. According to Docs: "4 bytes for the future".
-    misc_bits = np.flip(np.unpackbits(bin[19:20].view(dtype="u1")))
+    misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
         **parse_swift_xrt_sper(bin),
