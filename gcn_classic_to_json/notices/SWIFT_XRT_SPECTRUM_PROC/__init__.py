@@ -1,6 +1,7 @@
 import numpy as np
 
 from ... import utils
+from ..SWIFT_XRT_LC import termination_condition_dict
 
 mode_dict = {
     1: "Null",
@@ -16,10 +17,7 @@ mode_dict = {
 }
 
 termination_conditions_dict = {
-    0: "Normal",
-    1: "Terminated by time",
-    2: "Terminated by snapshot",
-    3: "Terminated by entering SAA",
+    **termination_condition_dict,
     4: "Spectrum generated at the LRPD-to-WT transition",
     5: "Spectrum generated at the WT-to-LRorPC transition",
 }
