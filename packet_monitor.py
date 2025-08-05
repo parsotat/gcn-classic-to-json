@@ -19,7 +19,8 @@ from gcn_classic_to_json.json import dumps
 import signal
 
 def handler(signum, frame):
-    print("Packet_monnitor is exiting.")
+    logging.info(f'Packet_monitor is exiting due to SIGINT.')
+    print(f'Packet_monitor is exiting due to SIGINT.')
     exit(0)
 
 signal.signal(signal.SIGINT, handler)
