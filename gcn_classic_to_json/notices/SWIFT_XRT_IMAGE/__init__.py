@@ -43,7 +43,7 @@ def parse_swift_xrt_image(bin):
         "not_real_astrophysical_peak": bool(misc_bits[10]),
         "pos_out_of_range": bool(misc_bits[11]),
         "bright_star_nearby": bool(misc_bits[13]),
-        "originally_subtresh": bool(misc_bits[20]),
+        "was_subthresh": bool(misc_bits[20]),
         "too_sequence_uploaded": bool(misc_bits[22]),
         "first_packet_missing": bool(misc_bits[27]),
         "second_packet_missing": bool(misc_bits[26]),

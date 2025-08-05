@@ -13,7 +13,7 @@
   "termination_condition": "Normal",
   "pos_out_of_range": false,
   "bright_star_nearby": false,
-  "originally_subtresh": false,
+  "was_subthresh": false,
   "too_sequence_uploaded": false,
   "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/sw01227767000msx.lc"
 }

@@ -18,6 +18,6 @@
   "pos_out_of_range": false,
   "bright_star_nearby": false,
   "sper_data_used": false,
-  "originally_subtresh": false,
+  "was_subthresh": false,
   "too_sequence_uploaded": false
 }

@@ -36,6 +36,6 @@ def parse(bin):
         "pos_out_of_range": bool(misc_bits[11]),
         "bright_star_nearby": bool(misc_bits[13]),
         "sper_data_used": bool(misc_bits[14]),
-        "originally_subtresh": bool(misc_bits[20]),
+        "was_subthresh": bool(misc_bits[20]),
         "too_sequence_uploaded": bool(misc_bits[22]),
     }

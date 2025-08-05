@@ -34,7 +34,7 @@ def parse(bin):
         "waveform": wave[0],
         "xrt_bat_theta": bin[20] * 1e-4,
         "cosmic_ray_possibility": bool(soln_status_bits[0]),
-        "originally_subtresh": bool(soln_status_bits[14]),
+        "was_subthresh": bool(soln_status_bits[14]),
         "spatial_coincidence": bool(soln_status_bits[28]),
         "temporal_coincidence": bool(soln_status_bits[29]),
         "not_real_astrophysical_peak": bool(misc_bits[10]),

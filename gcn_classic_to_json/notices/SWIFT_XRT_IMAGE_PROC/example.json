@@ -25,7 +25,7 @@
   "not_real_astrophysical_peak": false,
   "pos_out_of_range": false,
   "bright_star_nearby": false,
-  "originally_subtresh": false,
+  "was_subthresh": false,
   "too_sequence_uploaded": false,
   "first_packet_missing": false,
   "second_packet_missing": false,

@@ -46,7 +46,7 @@ def parse_swift_xrt_spec(bin):
         "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{utils.binary_to_string(bin[22:39])}",
         "pos_out_of_range": bool(misc_bits[11]),
         "bright_star_nearby": bool(misc_bits[13]),
-        "originally_subtresh": bool(misc_bits[20]),
+        "was_subthresh": bool(misc_bits[20]),
         "too_sequence_uploaded": bool(misc_bits[22]),
         "watchdog_timeout": bool(misc_bits[29]),
     }

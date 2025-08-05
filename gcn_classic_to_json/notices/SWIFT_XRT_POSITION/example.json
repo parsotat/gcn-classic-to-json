@@ -24,7 +24,7 @@
   "waveform": 134,
   "xrt_bat_theta": 0.008,
   "cosmic_ray_possibility": false,
-  "originally_subtresh": false,
+  "was_subthresh": false,
   "spatial_coincidence": false,
   "temporal_coincidence": false,
   "not_real_astrophysical_peak": false,

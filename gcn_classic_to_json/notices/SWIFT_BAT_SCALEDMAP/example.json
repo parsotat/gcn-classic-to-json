@@ -20,7 +20,7 @@
   "flaring_known_source": false,
   "star_tracker_status": "locked",
   "bright_star_nearby": false,
-  "originally_subtresh": false,
+  "was_subthresh": false,
   "removed_from_catalog": false,
   "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/sw01230423000msbsm.fits"
 }

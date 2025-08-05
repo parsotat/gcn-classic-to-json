@@ -36,7 +36,7 @@
   "flaring_known_source": false,
   "star_tracker_status": "locked",
   "bright_star_nearby": false,
-  "originally_subtresh": false,
+  "was_subthresh": false,
   "removed_from_catalog": false,
   "galaxy_nearby": false,
   "temporal_coincidence": false,
