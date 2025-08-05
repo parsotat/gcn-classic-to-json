@@ -48,7 +48,7 @@ def parse_swift_xrt_image(bin):
         "first_packet_missing": bool(misc_bits[27]),
         "second_packet_missing": bool(misc_bits[26]),
         "third_packet_missing": bool(misc_bits[25]),
-        "watchdog_time": bool(misc_bits[29]),
+        "watchdog_timeout": bool(misc_bits[29]),
         "grb_pos": [bin[20] * 1e-2, bin[21] * 1e-2],
         "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{utils.binary_to_string(bin[22:39])}",
     }
