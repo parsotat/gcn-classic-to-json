@@ -124,7 +124,7 @@ def main(args):
                         convert_notice(packet, json_conversion_file)
                         was_converted=True
                     except Exception as e:
-                        logging.debug(e)
+                        logging.debug(f"{type(e).__name__} Exception raised with message: {e}")
                         logging.debug(f"Unable to convert {packet} to json. Moving onto the next packet.")
                         # want to remove a potential json conversion so this packet can be requeued in the
                         # next iteration of the while loop
