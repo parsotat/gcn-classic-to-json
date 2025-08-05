@@ -33,6 +33,8 @@ def cli():
     parser.add_argument('--logname', required=False, type=str, default="packet_monitor.log", help='Directory where the log file will be placed')
     parser.add_argument('--send_json', action='store_true',
                         help="This allows for the json notices to be sent via kafka.")
+    parser.add_argument('--delta_t_max', required=False, type=int, default=60, help='Maximum amount of time to sleep in seconds between checking the datadir for new binary packets to convert to JSON')
+
 
     # parser.add_argument('--tmin', required=False, type=str, help='min time to start')
     # parser.add_argument('--tmax', required=False, type=str, help='max time to start')
@@ -64,6 +66,7 @@ def main(args):
     #go through the arguments
     datadir=Path(args.datadir)
     logdir=Path(args.logdir)
+    max_t=args.delta_t_max
 
     #do some error checking
     if not datadir.exists():
@@ -110,8 +113,10 @@ def main(args):
         # these also will be below any packets that are brand new so not super critical
         if len(binary_packets)==0:
             logging.info("No new binary packets were identified to process.")
-            sleep_time=60
-            logging.info(f"Set sleep_time to {sleep_time} second.")
+            if sleep_time < max_t:
+                sleep_time+=1
+                logging.info(f"Set sleep_time to {sleep_time} seconds.")
+            logging.info(f"Sleeping for {sleep_time} seconds.")
         else:
             for packet in binary_packets:
                 json_conversion_file=packet.parent.joinpath(f"{packet.name}.json")
