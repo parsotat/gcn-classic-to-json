@@ -9,8 +9,8 @@ def parse(bin):
     bin[11]  # Intentionally Omitted. Same as bin[16] but less precise.
 
     amp_wave_bits = np.unpackbits(bin[17:18].view(dtype="u1"), bitorder='little')
-    wave = np.packbits(amp_wave_bits[-8:])
-    amp = np.packbits(amp_wave_bits[-16:-8])
+    wave = np.packbits(amp_wave_bits[:8], bitorder='little')
+    amp = np.packbits(amp_wave_bits[8:16], bitorder='little')
 
     soln_status_bits = np.unpackbits(bin[18:19].view(dtype=np.uint8), bitorder='little')
 
