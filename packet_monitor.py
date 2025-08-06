@@ -97,7 +97,7 @@ def main(args):
     #now start to do a loop
     while True:
         #look for files in the datadir, sort by time
-        binary_packets = sorted(datadir.iterdir(), key=os.path.getmtime, reverse=True)
+        binary_packets = sorted(datadir.iterdir(), key=os.path.getmtime, reverse=False)
 
         #exclude non-swift binary packets, see save_swift function in hete.c
         binary_packets = [i for i in binary_packets if "S" in i.name]
