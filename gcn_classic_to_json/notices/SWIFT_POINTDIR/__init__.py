@@ -18,5 +18,5 @@ def parse(bin):
         "uvot_mode": hex(uvot_mode),
         "observation_time": bin[14] * 1e-2,
         "merit_value": bin[15] * 1e-2,
-        "target_name": utils.binary_to_string(bin[22:39]),
+        "target_name": {''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])},
     }

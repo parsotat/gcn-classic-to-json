@@ -49,8 +49,8 @@ def parse(bin):
         "flux_energy_range": [0.3, 10] if spectrum == "energy" else None,
         "duration": bin[16] * 1e-2,
         "confidence_level": bin[17] * 1e-4,
-        "ref_instrument": utils.binary_to_string(bin[20:24]),
-        "submitter_name": utils.binary_to_string(bin[24:39]),
+        "ref_instrument": f"{''.join([i.decode('utf-8') for i in  bin[20:24].view('c')])}",
+        "submitter_name": f"{''.join([i.decode('utf-8') for i in  bin[24:39].view('c')])}" ,
         "additional_info": "We cannot confirm whether this is the GRB or serendipitous"
         if trig_id[1]
         else "This is definitely related to GRB",

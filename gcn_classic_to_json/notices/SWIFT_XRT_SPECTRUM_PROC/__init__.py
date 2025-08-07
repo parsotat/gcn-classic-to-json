@@ -41,7 +41,7 @@ def parse_swift_xrt_spec(bin):
         "termination_condition": termination_conditions_dict[
             np.packbits(np.pad(termination_conditions_bits[-4:], pad_width=[4, 0]))[0]
         ],
-        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{utils.binary_to_string(bin[22:39])}",
+        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
         "pos_out_of_range": bool(misc_bits[11]),
         "bright_star_nearby": bool(misc_bits[13]),
         "was_subthresh": bool(misc_bits[20]),

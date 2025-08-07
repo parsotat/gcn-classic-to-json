@@ -11,7 +11,7 @@ def parse_swift_xrt_thresh(bin):
         "dec": bin[8] * 1e-4,
         "observation_livetime": bin[9] * 1e-3,
         "observation_end": utils.datetime_to_iso8601(bin[10], bin[11]),
-        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{utils.binary_to_string(bin[22:39])}",
+        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
     }
 
 

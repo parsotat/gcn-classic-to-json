@@ -29,7 +29,7 @@ def parse_swift_xrt_image(bin):
         "instrument": "XRT",
         "id": [bin[4]],
         "observation_start": utils.datetime_to_iso8601(bin[5], bin[6]),
-        "observation_livetime": bin[18] * 1e-2,
+        "exposure": bin[18] * 1e-2,
         "ra": bin[7] * 1e-4,
         "dec": bin[8] * 1e-4,
         "num_bright_pixels": bin[9],
@@ -50,7 +50,7 @@ def parse_swift_xrt_image(bin):
         "third_packet_missing": bool(misc_bits[25]),
         "watchdog_timeout": bool(misc_bits[29]),
         "grb_pos": [bin[20] * 1e-2, bin[21] * 1e-2],
-        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{utils.binary_to_string(bin[22:39])}",
+        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
     }
 
 

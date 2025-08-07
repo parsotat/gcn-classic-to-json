@@ -55,6 +55,5 @@ def parse(bin):
         "bright_star_nearby": bool(soln_status_bits[13]),
         "was_subthresh": bool(soln_status_bits[14]),
         "removed_from_catalog": bool(soln_status_bits[15]),
-        "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/"
-        + utils.binary_to_string(bin[22:39]),
+        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
     }

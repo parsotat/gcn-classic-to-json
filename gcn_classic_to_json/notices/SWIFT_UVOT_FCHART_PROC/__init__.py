@@ -30,7 +30,7 @@ def parse_uvot_srclist(bin):
         "image_offset": [bin[15], bin[16]],
         "detector_threshold": bin[17],
         "photometry_threshold": bin[18],
-        "fits_file_url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{utils.binary_to_string(bin[22:39])}",
+        "fits_file_url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
     }
 
 

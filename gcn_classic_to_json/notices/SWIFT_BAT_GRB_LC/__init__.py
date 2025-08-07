@@ -52,8 +52,7 @@ def parse(bin):
         "image_snr": bin[20] * 1e-2,
         "delta_time": bin[14] * 1e-2,
         "trigger_index": bin[17],
-        "url": "http://gcn.gsfc.nasa.gov/gcn/notices_s/"
-        + utils.binary_to_string(bin[22:39]),
+        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
         "grb_status": grb_status,
         "point_source": bool(soln_status_bits[0]),
         "flaring_known_source": bool(soln_status_bits[2]),

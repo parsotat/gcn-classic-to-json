@@ -15,7 +15,7 @@ def parse_swift_xrt_sper(bin):
         "observation_end": utils.datetime_to_iso8601(bin[10], bin[11]),
         "num_packets": bin[12],
         "num_events": bin[20],
-        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{utils.binary_to_string(bin[22:39])}",
+        "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
         "too_sequence_uploaded": bool(misc_bits[22]),
         "watchdog_timeout": bool(misc_bits[29]),
     }
