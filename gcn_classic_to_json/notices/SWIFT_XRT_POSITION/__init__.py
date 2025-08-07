@@ -24,8 +24,7 @@ def parse(bin):
         "ra": bin[7] * 1e-4,
         "dec": bin[8] * 1e-4,
         "ra_dec_error": bin[16] / 3600 * 1e-2,
-        "systematic_included": True,
-        "trigger_type": "image",
+        # "systematic_included": True, #this is always True
         "energy_flux": bin[9] * 1e-14,
         "image_snr": bin[21] * 1e-2,
         "tam_pos_1": [bin[12] * 1e-2, bin[13] * 1e-2],
