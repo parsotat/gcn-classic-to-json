@@ -50,7 +50,7 @@ def parse(bin):
         "instrument_theta": 1e-2 * bin[13],
         "rate_snr": bin[21] * 1e-2,
         "image_snr": bin[20] * 1e-2,
-        "delta_time": bin[14] * 1e-2, #start of LC with respect to trigger time
+        "delta_time": bin[14] * 1e-2, #start of LC with respect to trigger time (there is an implied negative sign ie T0-T_lc)
         "trigger_index": bin[17],
         "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
         "grb_status": grb_status,
