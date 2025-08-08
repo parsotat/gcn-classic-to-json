@@ -12,6 +12,7 @@ def parse(bin):
 
     soln_status_bits = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
 
+    misc_bits = np.unpackbits(bin[19:20].view(dtype=np.uint8), bitorder='little')
 
     if soln_status_bits[11]:
         grb_status = (
@@ -59,5 +60,6 @@ def parse(bin):
         "star_tracker_status": star_tracker_status[soln_status_bits[10]],
         "bright_star_nearby": bool(soln_status_bits[13]),
         "removed_from_catalog": bool(soln_status_bits[15]),
+        "watchdog_timeout": bool(misc_bits[29]),
         "galaxy_nearby": bool(soln_status_bits[16]),
     }

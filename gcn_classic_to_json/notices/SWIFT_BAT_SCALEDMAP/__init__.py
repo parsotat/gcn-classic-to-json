@@ -17,6 +17,8 @@ def parse(bin):
 
     soln_status_bits = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
 
+    misc_bits = np.unpackbits(bin[19:20].view(dtype=np.uint8), bitorder='little')
+
 
     if soln_status_bits[11]:
         grb_status = (
@@ -39,8 +41,13 @@ def parse(bin):
     else:
         grb_status = "It is not a GRB"
 
+    base_dict=parse_swift_bat(bin)
+
+    #replace trigger time with the time that the scaled map was created
+    dictionary["scaled_map_time"] = dictionary.pop("trigger_time")
+
     return {
-        **parse_swift_bat(bin),
+        **base_dict,
         "alert_type": "retraction" if soln_status_bits[5] else "initial",
         "latitude": lat * 1e-2,
         "longitude": lon * 1e-2,
@@ -55,5 +62,6 @@ def parse(bin):
         "bright_star_nearby": bool(soln_status_bits[13]),
         "was_subthresh": bool(soln_status_bits[14]),
         "removed_from_catalog": bool(soln_status_bits[15]),
+        "watchdog_timeout": bool(misc_bits[29]),
         "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
     }
