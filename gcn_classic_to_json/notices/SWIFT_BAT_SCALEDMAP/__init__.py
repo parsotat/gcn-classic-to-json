@@ -52,7 +52,7 @@ def parse(bin):
         "latitude": lat * 1e-2,
         "longitude": lon * 1e-2,
         "foreground_duration": bin[14] * 1e-3,
-        "image_duration": integ_time if soln_status_bits[4] else None,
+        "image_duration": integ_time if soln_status_bits[4] else None, #apparently this isnt valid if 2^24 misc bit is not set?
         "rate_duration": integ_time if not soln_status_bits[4] else None,
         "image_snr": bin[20] * 1e-2,
         "grb_status": grb_status,

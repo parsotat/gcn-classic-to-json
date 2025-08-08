@@ -7,6 +7,8 @@ def parse_swift_xrt_sper(bin):
     misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
+        "mission": "SWIFT",
+        "instrument": "XRT",
         "id": [bin[4]],
         "observation_start": utils.datetime_to_iso8601(bin[5], bin[6]),
         "ra": bin[7] * 1e-4,
