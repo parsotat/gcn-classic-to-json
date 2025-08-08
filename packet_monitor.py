@@ -79,7 +79,7 @@ def main(args):
 
     #setup the logger
     logging.basicConfig(filename=logdir.joinpath(args.logname), level=logging.DEBUG,
-                        format='%(asctime)s - %(levelname)s - %(message)s', datefmt="%Y-%m-%dT%H:%M:%S")
+                        format='%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s', datefmt="%Y-%m-%dT%H:%M:%S")
     #use UTC time
     logging.Formatter.converter = time.gmtime
 
