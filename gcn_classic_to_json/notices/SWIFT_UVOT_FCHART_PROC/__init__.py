@@ -18,13 +18,15 @@ filters = [
 
 def parse_uvot_srclist(bin):
     return {
+        "mission": "SWIFT",
+        "instrument": "UVOT",
         "id": [bin[4]],
-        "trigger_time": utils.datetime_to_iso8601(bin[5], bin[6]),
+        "img_start_time": utils.datetime_to_iso8601(bin[5], bin[6]),
         "ra_pointing": bin[7] * 1e-4,
         "dec_pointing": bin[8] * 1e-4,
         "roll": bin[9] * 1e-4,
         "filter": [filters[bin[10]]],
-        "background_mean": bin[11] * 1e-4,
+        "background_mean": bin[11] * 1e-3,
         "image_max": [bin[12], bin[13]],
         "n_stars": bin[14],
         "image_offset": [bin[15], bin[16]],
