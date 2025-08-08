@@ -14,7 +14,7 @@ def parse_uvot_image(bin):
 
     misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
-    pixel_binning = np.packbits(np.pad(np.flip(misc_bits[:5]), (3, 0)))
+    pixel_binning = np.packbits(misc_bits[:4], bitorder="little")
 
     return {
         "mission": "SWIFT",

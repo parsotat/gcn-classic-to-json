@@ -44,7 +44,7 @@ def parse(bin):
     base_dict=parse_swift_bat(bin)
 
     #replace trigger time with the time that the scaled map was created
-    dictionary["scaled_map_time"] = dictionary.pop("trigger_time")
+    base_dict["scaled_map_time"] = base_dict.pop("trigger_time")
 
     return {
         **base_dict,

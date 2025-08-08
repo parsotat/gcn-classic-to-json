@@ -28,7 +28,7 @@ def parse(bin):
         unit = "keV"
 
     expo_factor = np.float_power(
-        10, np.packbits(np.flip(misc_bits[24:])).view(dtype="i1")
+        10, np.packbits(misc_bits[24:], bitorder='little').view(dtype="i1")
     )[0]
 
     trig_id = np.unpackbits(bin[18:19].view(np.uint8), bitorder='little')
