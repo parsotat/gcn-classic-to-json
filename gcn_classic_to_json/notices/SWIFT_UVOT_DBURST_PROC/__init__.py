@@ -1,21 +1,8 @@
 import numpy as np
 
 from ... import utils
+from ..SWIFT_UVOT_FCHART_PROC import filters
 
-filters = [
-    "Blocked",
-    "UV_Grism",
-    "UVW2",
-    "V",
-    "UVM2",
-    "Vis_Grism",
-    "UVW1",
-    "U",
-    "Magnifier",
-    "B",
-    "White",
-    "unknown",
-]
 
 pixel_binning_values = {0: "1x1", 1: "2x2", 2: "4x4", 6: "64x64"}
 
@@ -30,6 +17,8 @@ def parse_uvot_image(bin):
     pixel_binning = np.packbits(np.pad(np.flip(misc_bits[:5]), (3, 0)))
 
     return {
+        "mission": "SWIFT",
+        "instrument": "UVOT",
         "id": [bin[4]],
         "trigger_time": utils.datetime_to_iso8601(bin[5], bin[6]),
         "ra_pointing": bin[7] * 1e-4,
