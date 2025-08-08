@@ -33,6 +33,8 @@ def parse(bin):
     misc_status = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
     return {
+        "mission": "SWIFT",
+        "instrument": "UVOT",
         "id": [bin[4]],
         "alert_tense": "test" if soln_status[30] else "current",
         "alert_type": "retraction" if soln_status[5] else "initial",
@@ -42,7 +44,7 @@ def parse(bin):
         "ra_dec_error": bin[16] * 1e-4 / 36,
         "systematic_included": True,
         "filter": [filters[bin[10]]],
-        "magnitide": bin[9] * 1e-2,
+        "magnitude": bin[9] * 1e-2,
         "magnitude_error": bin[20] * 1e-2,
         "point_source": bool(soln_status[0]),
         "catalog_source": bool(soln_status[3]),
