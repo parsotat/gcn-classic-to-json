@@ -44,13 +44,13 @@ def parse(bin):
         "latitude": lat * 1e-2,
         "longitude": lon * 1e-2,
         "trigger_type": "image" if soln_status_bits[4] else "rate",
-        "rate_duration": integ_time if not soln_status_bits[4] else None,
-        "rate_energy_range": integ_time if not soln_status_bits[4] else None,
+        "trigger_duration": integ_time, #if not soln_status_bits[4] else None,
+        # "rate_energy_range": integ_time if not soln_status_bits[4] else None, there is no E range in this binary pkt
         "instrument_phi": 1e-2 * bin[12],
         "instrument_theta": 1e-2 * bin[13],
         "rate_snr": bin[21] * 1e-2,
         "image_snr": bin[20] * 1e-2,
-        "delta_time": bin[14] * 1e-2,
+        "delta_time": bin[14] * 1e-2, #start of LC with respect to trigger time
         "trigger_index": bin[17],
         "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
         "grb_status": grb_status,
