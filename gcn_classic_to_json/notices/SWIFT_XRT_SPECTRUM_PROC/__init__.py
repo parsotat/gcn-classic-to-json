@@ -26,9 +26,12 @@ termination_conditions_dict = {
 def parse_swift_xrt_spec(bin):
     misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
-    termination_conditions_bits = np.unpackbits(bin[21:22].view(dtype="u1"), bitorder='little')
+    #extract the lower 4 bits, can also do bin[21] & 0x7
+    termination_condition = np.packbits(np.unpackbits(bin[21:22].view(dtype="u1"), bitorder="little")[:4], bitorder="little")[0]
 
     return {
+        "mission": "SWIFT",
+        "instrument": "XRT",
         "id": [bin[4]],
         "observation_start": utils.datetime_to_iso8601(bin[5], bin[6]),
         "ra": bin[7] * 1e-4,
@@ -37,10 +40,8 @@ def parse_swift_xrt_spec(bin):
         "observation_end": utils.datetime_to_iso8601(bin[10], bin[11]),
         "mode": mode_dict[bin[12]],
         "waveform": bin[13],
-        "bias": bin[14],
-        "termination_condition": termination_conditions_dict[
-            np.packbits(np.pad(termination_conditions_bits[-4:], pad_width=[4, 0]))[0]
-        ],
+        "bias": bin[14] if bin[12]==5 else None,
+        "termination_condition": termination_conditions_dict[termination_condition],
         "url": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in  bin[22:39].view('c')])}",
         "pos_out_of_range": bool(misc_bits[11]),
         "bright_star_nearby": bool(misc_bits[13]),
