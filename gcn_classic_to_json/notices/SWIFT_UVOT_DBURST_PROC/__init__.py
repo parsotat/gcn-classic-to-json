@@ -10,7 +10,7 @@ grb_position_sources = ["Window Position", "XRT Position"]
 
 
 def parse_uvot_image(bin):
-    y_pos, x_pos = bin[16:17].view(dtype="<i2")
+    x_pos, y_pos = bin[16:17].view(dtype="<i2")
 
     misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
 
@@ -20,7 +20,7 @@ def parse_uvot_image(bin):
         "mission": "SWIFT",
         "instrument": "UVOT",
         "id": [bin[4]],
-        "trigger_time": utils.datetime_to_iso8601(bin[5], bin[6]),
+        "img_start_time": utils.datetime_to_iso8601(bin[5], bin[6]),
         "ra_pointing": bin[7] * 1e-4,
         "dec_pointing": bin[8] * 1e-4,
         "roll": bin[9] * 1e-4,
@@ -39,9 +39,7 @@ def parse_uvot_image(bin):
 
 
 def parse(bin):
-    bin[
-        18
-    ]  # Unused. According to Docs: 'useless by the time it reaches GCN distribution'
+    bin[18]  # Unused. According to Docs: 'useless by the time it reaches GCN distribution'
     bin[20:22]  # Spare. According to Docs: '8 bytes for the future'
 
     return {**parse_uvot_image(bin)}
