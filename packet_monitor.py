@@ -133,11 +133,41 @@ def get_email_attachments(email_script):
     We want to parse the email script to get all the attachments that we eventually need to include in the json notice
     """
 
+    attachment_regex="-a\s+(.*)\s+--"
+
+    with open(email_script, 'r') as file:
+        filetext = file.read()
+
+    match = regex.search(attachment_regex, filetext)
+
+    if match:
+        all_attachments=match.group(1).split()
+        logging.info(f"Identified {len(all_attachments)} attachments associated with the notice:")
+        logging.info(f"{', '.join(all_attachments)}")
+        attachments=[Path(i) for i in all_attachments]
+
+        #make sure that all the attachments exist
+        for i in attachments:
+            if not i.exists():
+                logging.debug(f"The attachment {i} for this notice doesnt seem to exist.")
+                raise RuntimeError(f"The attachment {i} for this notice doesnt seem to exist.")
+
+    else:
+        logging.debug(f"No attachments were associated with the notice.")
+        attachments=None
+
+    return attachments
+
+
+
 def select_gromain_log(gromain_logdir):
     logs = sorted(gromain_logdir.iterdir(), key=os.path.getmtime, reverse=False)
 
     # exclude non-gromain logs
     gromain_logs = [i for i in logs if "G" in i.name]
+
+    if len(gromain_logs) <1:
+        raise RuntimeError(f"There seem to be no gromain logs in the directory {gromain_logdir}.")
 
     #select the latest one
     return gromain_logs[-1]
