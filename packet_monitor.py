@@ -9,7 +9,9 @@ from pathlib import Path
 import logging
 import time
 import os
+import regex
 import json
+import base64
 import numpy as np
 from gcn import NoticeType
 from gcn_classic_to_json import notices
@@ -30,6 +32,7 @@ def cli():
     parser = argparse.ArgumentParser(description='Process 160 byte binary packets and convert to JSON.')
     parser.add_argument('--datadir', required=True, type=str, help='Directory where the 160 byte packets will be placed')
     parser.add_argument('--logdir', required=True, type=str, help='Directory where the log file will be placed')
+    parser.add_argument('--gromain_logdir', required=True, type=str, help='Directory where the gromain log files will be placed')
     parser.add_argument('--logname', required=False, type=str, default="packet_monitor.log", help='Directory where the log file will be placed')
     parser.add_argument('--send_json', action='store_true',
                         help="This allows for the json notices to be sent via kafka.")
@@ -52,20 +55,99 @@ def cli():
     args = parser.parse_args()
     return args
 
-def convert_notice(binary_path, json_path):
+def convert_notice(binary_path, json_path, gromain_log):
 
     value = binary_path.read_bytes()
-    actual_str = dumps(notices.parse(value), indent=2)
+    parsed_dict=notices.parse(value)
+
+    #after parsing the binary notices, we need to determine if there are attachments that need to be encoded in the json
+    if "url" in parsed_dict.keys() or "fits_file_url" in parsed_dict.keys():
+        email_script=get_tmp_email_script(binary_path, gromain_log)
+        attachments=get_email_attachments(email_script)
+        attach_files(parsed_dict, attachments)
+
+
+    actual_str = dumps(parsed_dict, indent=2)
 
     with json_path.open("w") as f:
         print(actual_str, file=f)
     logging.info(f"Saved converted packet to {json_path}.")
+
+def attach_files(binary_dict, attachment_list):
+
+    #extract the filename attachment
+    if "url" in binary_dict.keys():
+        filename=Path(binary_dict["url"]).name
+    elif "fits_file_url" in binary_dict.keys():
+        filename = Path(binary_dict["url"]).name
+    else:
+        logging.debug(f"In attach_file, but somehow cannot extract a url from the dict: {binary_dict}")
+        raise KeyError(f"In attach_file, but somehow cannot extract a url from the dict: {binary_dict}")
+
+    # need to search the gromain log for the email that was sent with this filename as a part of the notice and extract
+    # all the attachments for us to encode in the json as well
+
+def get_tmp_email_script(binary_path, gromain_log):
+    """
+    want to search the gromain log for where the binary_path is printed and then extract the tmp email script filename
+    which has the mail commands used to send the notice.
+    """
+
+    # Construct the command with flexible parameters
+    command = f'tac {gromain_log} |sed \'/{binary_path.name}/q\' | tac | grep "email script" |head -n 1'
+
+    logger.info(f"Looking for the temporary email script within the Gromain log. Executing command: {command}")
+
+
+    try:
+        result = subprocess.run(
+            command,
+            shell=True,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+
+        logger.info("Command executed successfully")
+        logger.debug(f"The line that specifies the tmp email file is: {result.stdout.strip()}")
+
+        match=regex.search(".*:\s+(.*)", result.stdout.strip())
+        if match:
+            tmp_email_file = Path(match.group(1))
+            logger.info("Extracted the tmp email file as: {tmp_email_file}")
+        else:
+            tmp_email_file = None
+            logger.info("The regex was not able to extract the tmp email file.")
+
+        return tmp_email_file
+
+    except subprocess.CalledProcessError as e:
+        logger.debug(f"Command failed with return code {e.returncode}")
+
+    except Exception as e:
+        logger.debug(f"Unexpected error: {str(e)}")
+
+
+def get_email_attachments(email_script):
+    """
+    We want to parse the email script to get all the attachments that we eventually need to include in the json notice
+    """
+
+def select_gromain_log(gromain_logdir):
+    logs = sorted(gromain_logdir.iterdir(), key=os.path.getmtime, reverse=False)
+
+    # exclude non-gromain logs
+    gromain_logs = [i for i in logs if "G" in i.name]
+
+    #select the latest one
+    return gromain_logs[-1]
 
 
 def main(args):
     #go through the arguments
     datadir=Path(args.datadir)
     logdir=Path(args.logdir)
+    gromain_logdir=Path(args.gromain_logdir)
     max_t=args.delta_t_max
 
     #do some error checking
@@ -73,6 +155,16 @@ def main(args):
         raise RuntimeError(f"The data directory {datadir} doesnt exist.")
     if not logdir.exists():
         raise RuntimeError(f"The directory where the log file will be placed, {logdir} doesnt exist.")
+    if not gromain_logdir.exists():
+        raise RuntimeError(f"The gromain log directory {gromain_logdir} doesnt exist.")
+
+    #get the gromain logname
+    gromain_log=select_gromain_log(gromain_logdir)
+
+    if not gromain_log.exists():
+        raise RuntimeError(f"The gromain log  {gromain_log} doesnt exist.")
+
+
 
     if args.send_json:
         raise NotImplementedError
@@ -86,6 +178,7 @@ def main(args):
     #print something out
     logging.info(f'packet monitor starting.')
     logging.info(f'The data directory that will be monitored is: {datadir}.')
+    logging.info(f'The gromain log that is being monitored is: {gromain_log}')
 
     #setting sleep_time = 1 second by default. If there is nothing that is happening, we may want to increase this
     sleep_time=1
@@ -120,6 +213,19 @@ def main(args):
                 logging.info(f"Set sleep_time to {sleep_time} seconds.")
             logging.info(f"Sleeping for {sleep_time} seconds.")
         else:
+            #need to make sure that the gromain log hasnt changed due to eg a new day so a new log being created
+            # to prevent iterating over the log directory too much, try to do this when we think we need it done
+            new_gromain_logname = f'G{time.strftime("%Y%m%d", time.gmtime())}.log'
+            if new_gromain_logname != gromain_log.name:
+                gromain_log=select_gromain_log(gromain_logdir)
+                logging.info(f'The gromain log that is being monitored has changed it is now: {gromain_log}')
+
+                #this shouldnt ever execute due to how we are selecting the file directly from the directory, but this
+                # is here just in case
+                if not gromain_log.exists():
+                    logging.debug(f"The gromain log  {gromain_log} doesnt exist.")
+                    raise RuntimeError(f"The gromain log  {gromain_log} doesnt exist.")
+
             for packet in binary_packets:
                 json_conversion_file=packet.parent.joinpath(f"{packet.name}.json")
                 if not json_conversion_file.exists():
@@ -128,7 +234,7 @@ def main(args):
                     #try to do the conversion but catch any errors and print them and move onto the next binary packet.
                     # if we raised an exception in this packet, then dont try to send anything
                     try:
-                        convert_notice(packet, json_conversion_file)
+                        convert_notice(packet, json_conversion_file, gromain_log)
                         was_converted=True
                     except Exception as e:
                         logging.debug(f"{type(e).__name__} Exception raised with message: {e}")
