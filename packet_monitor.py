@@ -93,7 +93,7 @@ def attach_files(binary_dict, attachment_list):
     for attachment in attachment_list:
         logging.debug(f"Encoding attachment {attachment}.")
         with open(attachment, "rb") as file:
-            binary_dict["data"][f"{attachment.name}"] = base64.b64encode(file.read())
+            binary_dict["data"][f"{attachment.name}"] = base64.b64encode(file.read()).decode("utf-8")
 
 
 def get_tmp_email_script(binary_path, gromain_log):
