@@ -90,7 +90,7 @@ def attach_files(binary_dict, attachment_list):
 
     # iterate through the list of attachments and read them into the binary dict
     for attachment in attachment_list:
-        logging.idebugnfo(f"Encoding attachment {attachment}.")
+        logging.debug(f"Encoding attachment {attachment}.")
         with open(attachment, "rb") as file:
             binary_dict["data"][f"{attachment.name}"] = base64.b64encode(file.read())
 
