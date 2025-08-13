@@ -79,9 +79,11 @@ def attach_files(binary_dict, attachment_list):
 
     #remove the filename attachment
     if "url" in binary_dict.keys():
-        binary_dict.pop("url")
+        #binary_dict.pop("url")
+        logging.debug(f'In attach_files, the url from the dict is: {binary_dict["url"]}')
     elif "fits_file_url" in binary_dict.keys():
-        binary_dict.pop("fits_file_url")
+        #binary_dict.pop("fits_file_url")
+        logging.debug(f'In attach_files, the url from the dict is: {binary_dict["fits_file_url"]}')
     else:
         logging.debug(f"In attach_files, but somehow cannot remove the url from the dict: {binary_dict}")
         raise KeyError(f"In attach_files, but somehow cannot remove url from the dict: {binary_dict}")
