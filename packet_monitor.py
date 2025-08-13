@@ -103,7 +103,7 @@ def get_tmp_email_script(binary_path, gromain_log):
     # Construct the command with flexible parameters
     command = f'tac {gromain_log} |sed \'/{binary_path.name}/q\' | tac | grep "email script" |head -n 1'
 
-    logger.info(f"Looking for the temporary email script within the Gromain log. Executing command: {command}")
+    logging.info(f"Looking for the temporary email script within the Gromain log. Executing command: {command}")
 
 
     try:
@@ -115,24 +115,24 @@ def get_tmp_email_script(binary_path, gromain_log):
             check=True
         )
 
-        logger.info("Command executed successfully")
-        logger.debug(f"The line that specifies the tmp email file is: {result.stdout.strip()}")
+        logging.info("Command executed successfully")
+        logging.debug(f"The line that specifies the tmp email file is: {result.stdout.strip()}")
 
         match=regex.search(".*:\s+(.*)", result.stdout.strip())
         if match:
             tmp_email_file = Path(match.group(1))
-            logger.info("Extracted the tmp email file as: {tmp_email_file}")
+            logging.info("Extracted the tmp email file as: {tmp_email_file}")
         else:
             tmp_email_file = None
-            logger.info("The regex was not able to extract the tmp email file.")
+            logging.info("The regex was not able to extract the tmp email file.")
 
         return tmp_email_file
 
     except subprocess.CalledProcessError as e:
-        logger.debug(f"Command failed with return code {e.returncode}")
+        logging.debug(f"Command failed with return code {e.returncode}")
 
     except Exception as e:
-        logger.debug(f"Unexpected error: {str(e)}")
+        logging.debug(f"Unexpected error: {str(e)}")
 
 
 def get_email_attachments(email_script):
