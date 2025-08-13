@@ -89,6 +89,7 @@ def attach_files(binary_dict, attachment_list):
 
     # iterate through the list of attachments and read them into the binary dict
     for attachment in attachment_list:
+        logging.idebugnfo(f"Encoding attachment {attachment}.")
         with open(attachment, "rb") as file:
             binary_dict["data"][f"{attachment.name}"] = base64.b64encode(file.read())
 
@@ -160,6 +161,7 @@ def get_email_attachments(email_script):
 
     else:
         logging.debug(f"No attachments were associated with the notice.")
+        raise RuntimeError(f"No attachments were associated with the notice.")
         attachments=None
 
     return attachments
