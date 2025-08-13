@@ -66,6 +66,7 @@ def convert_notice(binary_path, json_path, gromain_log):
         email_script=get_tmp_email_script(binary_path, gromain_log)
         attachments=get_email_attachments(email_script)
         attach_files(parsed_dict, attachments)
+        logging.info(f"Done attaching files for the notice.")
 
 
     actual_str = dumps(parsed_dict, indent=2)
@@ -122,7 +123,7 @@ def get_tmp_email_script(binary_path, gromain_log):
         match=regex.search(".*:\s+(.*)", result.stdout.strip())
         if match:
             tmp_email_file = Path(match.group(1))
-            logging.info("Extracted the tmp email file as: {tmp_email_file}")
+            logging.info(f"Extracted the tmp email file as: {tmp_email_file}")
         else:
             tmp_email_file = None
             logging.info("The regex was not able to extract the tmp email file.")
