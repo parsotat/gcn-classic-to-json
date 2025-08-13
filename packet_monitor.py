@@ -12,6 +12,7 @@ import os
 import regex
 import json
 import base64
+import subprocess
 import numpy as np
 from gcn import NoticeType
 from gcn_classic_to_json import notices
