@@ -75,17 +75,23 @@ def convert_notice(binary_path, json_path, gromain_log):
 
 def attach_files(binary_dict, attachment_list):
 
-    #extract the filename attachment
+    #remove the filename attachment
     if "url" in binary_dict.keys():
-        filename=Path(binary_dict["url"]).name
+        binary_dict.pop("url")
     elif "fits_file_url" in binary_dict.keys():
-        filename = Path(binary_dict["url"]).name
+        binary_dict.pop("fits_file_url")
     else:
-        logging.debug(f"In attach_file, but somehow cannot extract a url from the dict: {binary_dict}")
-        raise KeyError(f"In attach_file, but somehow cannot extract a url from the dict: {binary_dict}")
+        logging.debug(f"In attach_files, but somehow cannot remove the url from the dict: {binary_dict}")
+        raise KeyError(f"In attach_files, but somehow cannot remove url from the dict: {binary_dict}")
 
-    # need to search the gromain log for the email that was sent with this filename as a part of the notice and extract
-    # all the attachments for us to encode in the json as well
+    #add a new key to hold a dict with the fits files attachments
+    binary_dict["data"]={}
+
+    # iterate through the list of attachments and read them into the binary dict
+    for attachment in attachment_list:
+        with open(attachment, "rb") as file:
+            binary_dict["data"][f"{attachment.name}"] = base64.b64encode(file.read())
+
 
 def get_tmp_email_script(binary_path, gromain_log):
     """
