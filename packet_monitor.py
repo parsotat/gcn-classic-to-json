@@ -255,7 +255,7 @@ def main(args):
         else:
             #need to make sure that the gromain log hasnt changed due to eg a new day so a new log being created
             # to prevent iterating over the log directory too much, try to do this when we think we need it done
-            new_gromain_logname = f'G{time.strftime("%Y%m%d", time.gmtime())}.log'
+            new_gromain_logname = f'G{time.strftime("%y%m%d", time.gmtime())}.log'
             if new_gromain_logname != gromain_log.name:
                 gromain_log=select_gromain_log(gromain_logdir)
                 logging.info(f'The gromain log that is being monitored has changed it is now: {gromain_log}')
