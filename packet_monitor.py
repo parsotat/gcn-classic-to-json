@@ -104,7 +104,8 @@ def get_tmp_email_script(binary_path, gromain_log):
     which has the mail commands used to send the notice.
     """
 
-    # Construct the command with flexible parameters
+    # Construct the command with flexible parameters. searching for this line:
+    # DBG: distribute(): Unique email script fname is: ...
     command = f'tac {gromain_log} |sed \'/{binary_path.name}/q\' | tac | grep "email script" |head -n 1'
 
     logging.info(f"Looking for the temporary email script within the Gromain log. Executing command: {command}")
