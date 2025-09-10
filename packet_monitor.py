@@ -238,7 +238,7 @@ def main(args):
     log.addHandler(handler)
 
     #use UTC time
-    log.Formatter.converter = time.gmtime
+    logging.Formatter.converter = time.gmtime
 
     #print something out
     log.info(f'packet monitor starting.')
