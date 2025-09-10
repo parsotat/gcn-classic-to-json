@@ -224,30 +224,33 @@ def main(args):
     #use UTC time
     #logging.Formatter.converter = time.gmtime
 
-    log = logging.getLogger(__name__)
-    log.setLevel(logging.DEBUG)
+    #log = logging.getLogger(__name__)
+    #log.setLevel(logging.DEBUG)
 
     #setup the time rotating logging
     handler = TimedRotatingFileHandler(logdir.joinpath(args.logname), when='midnight', utc=True)
     handler.suffix = "%Y-%m-%d"
 
-    formatter = logging.Formatter('%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s', datefmt="%Y-%m-%dT%H:%M:%S")
-    handler.setFormatter(formatter)
+    #formatter = logging.Formatter('%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s', datefmt="%Y-%m-%dT%H:%M:%S")
+    #handler.setFormatter(formatter)
 
     # Add the handler to the log
-    log.addHandler(handler)
+    #log.addHandler(handler)
+
+    logging.basicConfig( level=logging.DEBUG,
+                        format='%(asctime)s.%(msecs)03d - %(levelname)s - %(message)s', datefmt="%Y-%m-%dT%H:%M:%S", handlers=[handler])
 
     #use UTC time
     logging.Formatter.converter = time.gmtime
 
     #print something out
-    log.info(f'packet monitor starting.')
-    log.info(f'The data directory that will be monitored is: {datadir}.')
-    log.info(f'The gromain log that is being monitored is: {gromain_log}')
+    logging.info(f'packet monitor starting.')
+    logging.info(f'The data directory that will be monitored is: {datadir}.')
+    logging.info(f'The gromain log that is being monitored is: {gromain_log}')
 
     #setting sleep_time = 1 second by default. If there is nothing that is happening, we may want to increase this
     sleep_time=1
-    log.info(f"Set sleep_time to {sleep_time} second.")
+    logging.info(f"Set sleep_time to {sleep_time} second.")
 
     #initalize this to false
     was_converted=False
@@ -272,29 +275,29 @@ def main(args):
         #exclude any binary packets that have already been dealt with. ie they have a name with .json appended
         # these also will be below any packets that are brand new so not super critical
         if len(binary_packets)==0:
-            log.info("No new binary packets were identified to process.")
+            logging.info("No new binary packets were identified to process.")
             if sleep_time < max_t:
                 sleep_time+=1
                 logging.info(f"Set sleep_time to {sleep_time} seconds.")
-            log.info(f"Sleeping for {sleep_time} seconds.")
+            logging.info(f"Sleeping for {sleep_time} seconds.")
         else:
             #need to make sure that the gromain log hasnt changed due to eg a new day so a new log being created
             # to prevent iterating over the log directory too much, try to do this when we think we need it done
             new_gromain_logname = f'G{time.strftime("%y%m%d", time.gmtime())}.log'
             if new_gromain_logname != gromain_log.name:
                 gromain_log=select_gromain_log(gromain_logdir)
-                log.info(f'The gromain log that is being monitored has changed it is now: {gromain_log}')
+                logging.info(f'The gromain log that is being monitored has changed it is now: {gromain_log}')
 
                 #this shouldnt ever execute due to how we are selecting the file directly from the directory, but this
                 # is here just in case
                 if not gromain_log.exists():
-                    log.debug(f"The gromain log  {gromain_log} doesnt exist.")
+                    logging.debug(f"The gromain log  {gromain_log} doesnt exist.")
                     raise RuntimeError(f"The gromain log  {gromain_log} doesnt exist.")
 
             for packet in binary_packets:
                 json_conversion_file=packet.parent.joinpath(f"{packet.name}.json")
                 if not json_conversion_file.exists():
-                    log.info(f'Packet monitor converting {packet} to json.')
+                    logging.info(f'Packet monitor converting {packet} to json.')
 
                     #try to do the conversion but catch any errors and print them and move onto the next binary packet.
                     # if we raised an exception in this packet, then dont try to send anything
@@ -302,15 +305,15 @@ def main(args):
                         convert_notice(packet, json_conversion_file, gromain_log)
                         was_converted=True
                     except Exception as e:
-                        log.debug(f"{type(e).__name__} Exception raised with message: {e}")
-                        log.debug(f"Unable to convert {packet} to json. Moving onto the next packet.")
+                        logging.debug(f"{type(e).__name__} Exception raised with message: {e}")
+                        logging.debug(f"Unable to convert {packet} to json. Moving onto the next packet.")
                         # want to remove a potential json conversion so this packet can be requeued in the
                         # next iteration of the while loop
                         if json_conversion_file.exists():
                             json_conversion_file.unlink()
-                            log.debug(f"File {json_conversion_file} deleted successfully.")
+                            logging.debug(f"File {json_conversion_file} deleted successfully.")
                         else:
-                            log.debug(f"File {json_conversion_file} was not created.")
+                            logging.debug(f"File {json_conversion_file} was not created.")
 
 
                     if args.send_json and was_converted:
@@ -318,7 +321,7 @@ def main(args):
                         raise NotImplementedError
 
             sleep_time=1
-            log.info(f"Set sleep_time to {sleep_time} second.")
+            logging.info(f"Set sleep_time to {sleep_time} second.")
 
         time.sleep(sleep_time)
 
