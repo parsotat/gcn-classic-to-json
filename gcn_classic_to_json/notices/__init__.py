@@ -41,4 +41,10 @@ def parse(value):
 
 
     parser = _parsers[key.name]
-    return parser(ints)
+
+    parsed_dict = parser(ints)
+
+    #add the notice type to the output dict
+    parsed_dict["notice_type"]=key.name
+
+    return parsed_dict
