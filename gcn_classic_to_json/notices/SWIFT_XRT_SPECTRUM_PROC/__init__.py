@@ -2,19 +2,7 @@ import numpy as np
 
 from ... import utils
 from ..SWIFT_XRT_LC import termination_condition_dict
-
-mode_dict = {
-    1: "Null",
-    2: "Short image",
-    3: "long image",
-    4: "Piled-up Photodiode",
-    5: "Low Rate Photodiode",
-    6: "Windowed Timing",
-    7: "Photo-counting",
-    8: "Raw data",
-    9: "Bias map",
-    10: "Stop",
-}
+from ..SWIFT_XRT_IMAGE import mode_dict
 
 termination_conditions_dict = {
     **termination_condition_dict,
