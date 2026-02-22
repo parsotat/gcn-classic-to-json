@@ -10,6 +10,6 @@ def parse(bin):
 
     return {
         **parse_swift_xrt_sper(bin),
-        "star_tracker_not_locked": bool(misc_bits[10]),
-        "pos_out_of_range": bool(misc_bits[11]),
+        #"star_tracker_not_locked": bool(misc_bits[10]),
+        #"pos_out_of_range": bool(misc_bits[11]),
     }
