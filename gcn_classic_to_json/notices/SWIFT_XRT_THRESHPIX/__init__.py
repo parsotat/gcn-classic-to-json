@@ -12,8 +12,8 @@ def parse(bin):
 
     return {
         **parse_swift_xrt_thresh(bin),
-        "pos_out_of_range": bool(misc_bits[11]),
-        "was_subthresh": bool(misc_bits[20]),
-        "too_sequence_uploaded": bool(misc_bits[22]),
-        "watchdog_timeout": bool(misc_bits[29]),
+        #"pos_out_of_range": bool(misc_bits[11]),
+        #"was_subthresh": bool(misc_bits[20]),
+        #"too_sequence_uploaded": bool(misc_bits[22]),
+        #"watchdog_timeout": bool(misc_bits[29]),
     }
