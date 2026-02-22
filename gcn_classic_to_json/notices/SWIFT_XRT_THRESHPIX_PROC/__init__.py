@@ -4,6 +4,8 @@ from ... import utils
 
 
 def parse_swift_xrt_thresh(bin):
+    misc_bits = np.unpackbits(bin[19:20].view(np.uint8), bitorder='little')
+
     return {
         # Fixed string constant identifying the mission. Listed explicitly as a schema field
         # in swift.xrt.thresholded_pixels with the value "Swift".
