@@ -81,13 +81,16 @@ def parse(bin):
     catalog_num = bin[25]
 
     #bins 36 onwards are assigned on a byte, by byte basis, and there are 9 bytes that are assigned via s_t_r
-    merit_bytes=bin[36:].view(dtype="i1")
+    merit_bytes = bin[36:].view(dtype="i1")
 
     #the energyrange is given by the 4th index of the extracted bytes
     energy_range_idx = merit_bytes[4]
     energy_range = energy_ranges[energy_range_idx]
 
     return {
+        # Fields inherited from parse_swift_bat(bin):
+        #   mission, instrument, id, trigger_time, ra, dec, rate_snr
+        # See parse_swift_bat() definition for field-level comments on these.
         **parse_swift_bat(bin),
 
         # bin[11] = burst_error: radius of the position error circle (90% containment).
@@ -134,10 +137,6 @@ def parse(bin):
         # Units are counts.
         "background_count_rate": bin[22],
 
-        # bin[21] = rate_signif: signal-to-noise ratio of the rate-trigger detection.
-        # Stored in centi-sigma (fl.pt. SNR * 100). Divide by 100 to recover sigma.
-        #"rate_snr": bin[21] * 1e-2, this is in parse_swift_bat due to overlap with QL position
-
         # bin[14] = integ_time: duration of the trigger sampling interval in units of
         # 4msec ticks (e.g. a value of 16 = 64 msec trigger criterion).
         # rate_duration is set to the integration time for rate triggers; None for image
@@ -154,6 +153,14 @@ def parse(bin):
         "image_duration": integ_time if soln_status_bits[4] else None,
         "image_energy_range": energy_range if soln_status_bits[4] else None,
 
+        # classification, properties, T90, hardness_ratio, and spectral_lag are schema
+        # fields that are not derivable from the BAT_GRB_POS binary packet.
+        "classification": None,
+        "properties": None,
+        "T90": None,
+        "hardness_ratio": None,
+        "spectral_lag": None,
+
         # bin[5/23] = background_start_time: start time of the background interval.
         # Uses the burst TJD (bin[5]) combined with the background start SOD (bin[23]),
         # which is stored in centi-seconds. Note: bin[23] may be zero if the trigger
@@ -169,8 +176,13 @@ def parse(bin):
         # Set to None if this is not a catalog source.
         "catalog_number": catalog_num if soln_status_bits[3] else None,
 
-        # soln_status bit 10 (star_tracker): indicates whether the StarTracker was locked
-        # at the time of the trigger. Decoded via star_tracker_status lookup dict.
+        # misc bit 12: set if the theta value (angle between Swift pointing direction and
+        # the trigger position) was less than 10 arcmin — i.e. Swift was already pointed
+        # at this source at the time of the trigger.
+        "within_10arcmin": bool(misc_bits[12]),
+
+        # soln_status bit 10 (st_loss_lock): indicates whether the StarTracker was NOT
+        # locked at the time of the trigger. Decoded via star_tracker_status lookup dict.
         # True = StarTracker was locked; False = StarTracker was NOT locked.
         "star_tracker_locked": False if "not" in star_tracker_status[soln_status_bits[10]] else True,
 
@@ -198,7 +210,7 @@ def parse(bin):
         # interesting known source (e.g. a flaring catalogued source).
         # "flaring_known_source": bool(soln_status_bits[2]),
 
-        # soln_status bit 13 (bright_star): set if the BAT position is near a bright star
+        # soln_status bit 13 (near_brt_star): set if the BAT position is near a bright star
         # (magnitude < 6.5).
         # "bright_star_nearby": bool(soln_status_bits[13]),
 

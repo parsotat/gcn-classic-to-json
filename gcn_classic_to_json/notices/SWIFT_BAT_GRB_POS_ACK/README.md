@@ -68,18 +68,18 @@ Stored in `bin[18]`. Contains flight- and ground-assigned flags characterising t
 | $$2^{3}$$ | Flight | `flt_cat_src` | `1` = source is in the flight on-board catalog |
 | $$2^{4}$$ | Flight | `image_trig` | `1` = image trigger; `0` = rate trigger |
 | $$2^{5}$$ | Ground | `def_not_grb` | `1` = definitively NOT a GRB — **this is a retraction** |
-| $$2^{6}$$–$$2^{9}$$ | — | *(spare)* | Reserved |
-| $$2^{10}$$ | Flight | `star_tracker` | StarTracker lock status; decoded via lookup table |
-| $$2^{11}$$–$$2^{12}$$ | — | *(spare)* | Reserved |
-| $$2^{13}$$ | Ground | `bright_star` | `1` = position is near a bright star (magnitude < 6.5) |
-| $$2^{14}$$ | Ground | `was_subthresh` | `1` = originally a SubThreshold trigger, now promoted to a real position notice |
-| $$2^{15}$$ | Ground | `removed_from_catalog` | `1` = source has been removed from the on-board catalog |
-| $$2^{16}$$ | Ground | `galaxy_nearby` | `1` = a nearby NGC galaxy is within the position error circle |
-| $$2^{17}$$–$$2^{27}$$ | — | *(spare)* | Reserved |
-| $$2^{28}$$ | Ground | `spatial_coinc` | `1` = spatial coincidence with another event |
-| $$2^{29}$$ | Ground | `temporal_coinc` | `1` = temporal coincidence with another event |
-| $$2^{30}$$ | Ground | `test_submit` | `1` = test submission; `0` = real current notice |
-| $$2^{31}$$ | — | *(spare)* | Reserved |
+| $$2^{6}$$ | Ground | `uncert_grb` | `1` = probably not a GRB or transient (high background level, i.e. near SAA) |
+| $$2^{7}$$ | Ground | `uncert_grb` | `1` = probably not a GRB or transient (low image significance; < 7.0 sigma) |
+| $$2^{8}$$ | Ground | `gnd_cat_src` | `1` = source is in the BAT ground catalog |
+| $$2^{9}$$ | Ground | `uncert_grb` | `1` = probably not a GRB or transient (negative background slope; exiting SAA) |
+| $$2^{10}$$ | Ground | `st_loss_lock` | `1` = StarTracker not locked; trigger is probably bogus |
+| $$2^{11}$$ | Ground | `uncert_grb` | `1` = very probably not a GRB or transient (VERY low image significance; < 6.5 sigma) |
+| $$2^{12}$$ | Ground | `blk_cat_src` | `1` = source is in the catalog of sources to be blocked (internal use only) |
+| $$2^{13}$$ | Ground | `near_brt_star` | `1` = there is a nearby bright star (duplicate of `misc` $$2^{13}$$) |
+| $$2^{14}$$–$$2^{31}$$ | — | *(spare)* | Reserved |
+
+> **Note:** The `star_tracker_locked` schema field is derived from `soln_status` bit $$2^{10}$$
+> (`st_loss_lock`): `True` if the StarTracker was locked, `False` if not locked.
 
 ---
 
@@ -91,14 +91,21 @@ Stored in `bin[19]`.
 |-----|-------------|
 | $$2^{0}$$–$$2^{10}$$ | Not assigned (spare) |
 | $$2^{11}$$ | `1` = one or more of the RA/Dec/Roll/Theta/Phi values were out of valid range (e.g. RA = 361°) |
-| $$2^{12}$$ | Not assigned |
-| $$2^{13}$$ | `1` = position is near a bright star (magnitude < 6.5) |
-| $$2^{14}$$ | `1` = position is inside a catalogued NGC galaxy (position error radius < galaxy radius) |
-| $$2^{15}$$ | `1` = an NGC galaxy is inside the position error circle (galaxy radius < position error radius) |
-| $$2^{16}$$–$$2^{21}$$ | Not assigned |
+| $$2^{12}$$ | `1` = the theta value was less than 10 arcmin — Swift was already pointed at this source (`within_10arcmin`) |
+| $$2^{13}$$ | `1` = position is near (< 0.3 deg) a bright star (magnitude < 6.5) |
+| $$2^{14}$$ | `1` = position is inside the (circularized) NGC galaxy: distance between position and galaxy center is less than the sum of the position error radius and galaxy radius, AND the position error radius is smaller than the galaxy radius |
+| $$2^{15}$$ | `1` = an NGC galaxy is inside the position error circle: distance between position and galaxy center is less than the sum of the position error radius and galaxy radius, AND the galaxy radius is smaller than the position error radius |
+| $$2^{16}$$–$$2^{19}$$ | Not assigned |
+| $$2^{20}$$ | `1` = this was originally a SubThreshold trigger, now converted to a real `BAT_POS` notice |
+| $$2^{21}$$ | `1` = this is an image trigger AND it occurred during a StarTracker Loss-of-Lock event |
 | $$2^{22}$$ | `1` = notice generated as a result of an uploaded TOO (Target-of-Opportunity) sequence |
-| $$2^{23}$$–$$2^{29}$$ | Not assigned |
-| $$2^{30}$$ | `1` = ground-generated; `0` = flight-generated |
+| $$2^{23}$$ | `1` = the trigger time was zero; the spacecraft system clock from the TDRSS Message Secondary Header was used to fill the `Burst_TJD` and `Burst_SOD` fields (occurs during a ground-commanded GRB TOO) |
+| $$2^{24}$$ | `1` = the TDRSS message was received on the ground more than 60 sec after the BAT trigger time (most likely caused by BAT triggering during a Malindi downlink pass, where TDRSS messages are buffered on-board until the pass ends) |
+| $$2^{25}$$ | `1` = this is an updated position notice that changes/improves the position specified in the original `BAT_Position` notice |
+| $$2^{26}$$–$$2^{27}$$ | Not assigned |
+| $$2^{28}$$ | `1` = this notice was derived from a SERS (Malindi playback) message rather than a real-time TDRSS message; some fields may be undefined |
+| $$2^{29}$$ | `1` = this notice was reconstituted from a `BAT_LC` message received before a `BAT_POS` was received; some fields may be undefined |
+| $$2^{30}$$ | `1` = ground-generated notice; `0` = flight-generated |
 | $$2^{31}$$ | `1` = CRC error detected in one or more telemetry packets |
 
 ---
@@ -159,38 +166,35 @@ next lowest, etc. There are 10 merit parameters in total.
 
 ## swift.bat.position JSON Schema Fields
 
-> **Note:** A dedicated `swift.bat.position` schema page is not present in the GCN JSON
-> schema document. The fields below are inferred from the packet definition and from
-> the closely related `swift.bat.scaled_map` schema which shares many of the same fields.
-
-| Field                    | Type / Example                    | Source |
-|--------------------------|-----------------------------------|--------|
-| `alert_datetime`         | ISO 8601 string                   | GCN metadata |
-| `alert_tense`            | `"current"` or `"test"`           | `soln_status` $$2^{30}$$ |
-| `alert_type`             | `"initial"` or `"retraction"`     | `soln_status` $$2^{5}$$ |
-| `mission`                | `"Swift"`                         | Fixed constant |
-| `instrument`             | `"BAT"`                           | Fixed constant |
-| `id`                     | integer trigger ID                | `bin[4]` lower 24 bits |
-| `trigger_time`           | ISO 8601 datetime string          | `bin[5]`, `bin[6]` |
-| `ra`                     | float (degrees)                   | `bin[7] × 1e-4` |
-| `dec`                    | float (degrees)                   | `bin[8] × 1e-4` |
-| `ra_dec_error`           | float (degrees)                   | `bin[11] × 1e-4` |
-| `systematic_included`    | `False` (always)                  | Fixed constant |
-| `latitude`               | float (degrees)                   | `lat × 1e-2` (high-order short of `bin[16]`) |
-| `longitude`              | float (degrees)                   | `lon × 1e-2` (low-order short of `bin[16]`) |
-| `instrument_phi`         | float (degrees)                   | `bin[12] × 1e-2` |
-| `instrument_theta`       | float (degrees)                   | `bin[13] × 1e-2` |
-| `trigger_type`           | `"image"` or `"rate"`             | `soln_status` $$2^{4}$$ |
-| `trigger_index`          | integer                           | `bin[17]` |
-| `net_count_rate`         | counts                            | `bin[9]` |
-| `background_count_rate`  | counts                            | `bin[22]` |
-| `rate_snr`               | float (sigma)                     | `bin[21] × 1e-2` |
-| `rate_duration`          | float (sec) or `None`             | `bin[14]` × 4msec; `None` for image triggers |
-| `rate_energy_range`      | energy band or `None`             | decoded from trigger criterion; `None` for image triggers |
-| `image_snr`              | float (sigma)                     | `bin[20] × 1e-2` |
-| `image_duration`         | float (sec) or `None`             | `bin[14]` × 4msec; `None` for rate triggers |
-| `image_energy_range`     | energy band or `None`             | decoded from trigger criterion; `None` for rate triggers |
-| `background_start_time`  | ISO 8601 datetime string          | `bin[5]`, `bin[23]` |
-| `background_duration`    | float (seconds)                   | `bin[24] × 1e-2` |
-| `catalog_number`         | integer or `None`                 | `bin[25]`; `None` if `soln_status` $$2^{3}$$ = 0 |
-| `star_tracker_locked`    | bool                              | `soln_status` $$2^{10}$$ via lookup |
+| Field                    | Type / Example                                                    | Source | Notes |
+|--------------------------|-------------------------------------------------------------------|--------|-------|
+| `alert_datetime`         | ISO 8601 string                                                   | GCN metadata | |
+| `alert_tense`            | `"current"` or `"test"`                                           | `soln_status` $$2^{30}$$ | |
+| `alert_type`             | `"initial"` or `"retraction"`                                     | `soln_status` $$2^{5}$$ | |
+| `mission`                | `"Swift"`                                                         | Fixed constant (`parse_swift_bat`) | |
+| `instrument`             | `"BAT"`                                                           | Fixed constant (`parse_swift_bat`) | |
+| `id`                     | integer trigger ID                                                | `bin[4]` lower 24 bits (`parse_swift_bat`) | |
+| `trigger_time`           | ISO 8601 datetime string                                          | `bin[5]`, `bin[6]` (`parse_swift_bat`) | |
+| `ra`                     | float (degrees)                                                   | `bin[7] × 1e-4` (`parse_swift_bat`) | |
+| `dec`                    | float (degrees)                                                   | `bin[8] × 1e-4` (`parse_swift_bat`) | |
+| `ra_dec_error`           | float (degrees), e.g. 4 arcmin                                    | `bin[11] × 1e-4` | |
+| `systematic_included`    | `False` (always)                                                  | Fixed constant | |
+| `latitude`               | float (degrees)                                                   | `lat × 1e-2` (high-order short of `bin[16]`) | |
+| `longitude`              | float (degrees)                                                   | `lon × 1e-2` (low-order short of `bin[16]`) | |
+| `instrument_phi`         | float (degrees)                                                   | `bin[12] × 1e-2` | |
+| `instrument_theta`       | float (degrees)                                                   | `bin[13] × 1e-2` | |
+| `trigger_type`           | `"image"` or `"rate"`                                             | `soln_status` $$2^{4}$$ | |
+| `trigger_index`          | integer                                                           | `bin[17]` | |
+| `net_count_rate`         | counts                                                            | `bin[9]` | |
+| `background_count_rate`  | counts                                                            | `bin[22]` | |
+| `rate_snr`               | float (sigma)                                                     | `bin[21] × 1e-2` (`parse_swift_bat`) | |
+| `rate_duration`          | float (sec) or `None`                                             | `bin[14]` × 4msec; `None` for image triggers | |
+| `rate_energy_range`      | energy band or `None`                                             | decoded from trigger criterion; `None` for image triggers | |
+| `image_snr`              | float (sigma)                                                     | `bin[20] × 1e-2` | |
+| `image_duration`         | float (sec) or `None`                                             | `bin[14]` × 4msec; `None` for rate triggers | |
+| `image_energy_range`     | energy band or `None`                                             | decoded from trigger criterion; `None` for rate triggers | |
+| `classification`         | e.g. `{'known': 0.0, 'unknown': 1.0}`                            | — | `None`; not in binary packet |
+| `properties`             | e.g. `{'NAME': 1.0, 'LGRB': 0.0, 'SGRB': 0.0}`                  | — | `None`; not in binary packet |
+| `T90`                    | float (seconds)                                                   | — | `None`; not in binary packet |
+| `hardness_ratio`         | float                                                             | — | `None`; not in binary packet |
+| `spectral_lag`           | float                                                             | — | `None`; not
