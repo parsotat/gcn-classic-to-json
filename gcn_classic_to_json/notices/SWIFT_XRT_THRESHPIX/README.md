@@ -91,18 +91,18 @@ exception of $$2^{30}$$ which distinguishes the two subtypes.
 Defined in the GCN JSON schema document for `swift.xrt.thresholded_pixels` (covers both raw
 and processed subtypes):
 
-| Field                  | Type / Example                | Source |
-|------------------------|-------------------------------|--------|
-| `alert_datetime`       | ISO 8601 string               | GCN metadata |
-| `alert_tense`          | `"current"` or `"test"`       | GCN metadata |
-| `alert_type`           | `"initial"` or `"update"`     | GCN metadata |
-| `mission`              | `"Swift"`                     | Fixed constant |
-| `instrument`           | `"XRT"`                       | Fixed constant |
-| `id`                   | integer trigger ID            | `bin[4]` lower 24 bits |
-| `pointing_ra`          | float (degrees)               | `bin[7] × 1e-4` |
-| `pointing_dec`         | float (degrees)               | `bin[8] × 1e-4` |
-| `observation_start`    | ISO 8601 datetime string      | `bin[5]`, `bin[6]` |
-| `observation_stop`     | ISO 8601 datetime string      | `bin[10]`, `bin[11]` |
+| Field           | Type / Example                | Source |
+|-----------------|-------------------------------|--------|
+| `alert_datetime` | ISO 8601 string               | GCN metadata |
+| `alert_tense`   | `"current"` or `"test"`       | GCN metadata |
+| `alert_type`    | `"initial"` or `"update"`     | GCN metadata |
+| `mission`       | `"Swift"`                     | Fixed constant |
+| `instrument`    | `"XRT"`                       | Fixed constant |
+| `id`            | integer trigger ID            | `bin[4]` lower 24 bits |
+| `ra_pointing`   | float (degrees)               | `bin[7] × 1e-4` |
+| `dec_pointing`  | float (degrees)               | `bin[8] × 1e-4` |
+| `observation_start` | ISO 8601 datetime string      | `bin[5]`, `bin[6]` |
+| `observation_stop` | ISO 8601 datetime string      | `bin[10]`, `bin[11]` |
 | `observation_livetime` | float (seconds)               | `bin[9] × 1e-3` |
-| `watchdog_timeout`     | bool                          | `misc` $$2^{29}$$ |
-| `subtype`              | `"FLIGHT"` or `"PROCESSED"`   | `misc` $$2^{30}$$ |
+| `watchdog_timeout` | bool                          | `misc` $$2^{29}$$ |
+| `subtype`       | `"FLIGHT"` or `"PROCESSED"`   | `misc` $$2^{30}$$ |

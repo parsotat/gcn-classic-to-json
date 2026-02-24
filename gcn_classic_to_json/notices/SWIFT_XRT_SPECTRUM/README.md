@@ -139,21 +139,21 @@ and $$2^{30}$$ which are only meaningful for the ground-processed form (type=77)
 
 Defined in the GCN JSON schema document for `swift.xrt.spectrum` (covers both raw and processed subtypes):
 
-| Field                   | Type / Example                                                                                                                                                          | Source |
-|-------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
-| `alert_datetime`        | ISO 8601 string                                                                                                                                                         | GCN metadata |
-| `alert_tense`           | `"current"` or `"test"`                                                                                                                                                 | GCN metadata |
-| `alert_type`            | `"initial"` or `"update"`                                                                                                                                               | GCN metadata |
-| `mission`               | `"Swift"`                                                                                                                                                               | Fixed constant |
-| `instrument`            | `"XRT"`                                                                                                                                                                 | Fixed constant |
-| `id`                    | integer trigger ID                                                                                                                                                      | `bin[4]` lower 24 bits |
-| `pointing_ra`           | float (degrees)                                                                                                                                                         | `bin[7] × 1e-4` |
-| `pointing_dec`          | float (degrees)                                                                                                                                                         | `bin[8] × 1e-4` |
-| `observation_start`     | ISO 8601 datetime string                                                                                                                                                | `bin[5]`, `bin[6]` |
-| `observation_stop`      | ISO 8601 datetime string                                                                                                                                                | `bin[10]`, `bin[11]` |
-| `observation_livetime`  | float (seconds)                                                                                                                                                         | `bin[9] × 1e-2` |
-| `ccd_readout_mode`      | `"Null"`, `"Short image"`, `"Long image"`, `"Piled-up Photodiode"`, `"Low Rate Photodiode"`, `"Windowed Timing"`, `"Photo-counting"`, `"Raw data"`, `"Bias map"`, `"Stop"` | `bin[12]` |
-| `ccd_waveform_id`       | integer (`50` or `60`)                                                                                                                                                  | `bin[13]` |
-| `bias`                  | integer (ADU), or `None` if `mode ≠ 5`                                                                                                                                 | `bin[14]` |
+| Field               | Type / Example                                                                                                                                                          | Source |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------|
+| `alert_datetime`    | ISO 8601 string                                                                                                                                                         | GCN metadata |
+| `alert_tense`       | `"current"` or `"test"`                                                                                                                                                 | GCN metadata |
+| `alert_type`        | `"initial"` or `"update"`                                                                                                                                               | GCN metadata |
+| `mission`           | `"Swift"`                                                                                                                                                               | Fixed constant |
+| `instrument`        | `"XRT"`                                                                                                                                                                 | Fixed constant |
+| `id`                | integer trigger ID                                                                                                                                                      | `bin[4]` lower 24 bits |
+| `ra_pointing`       | float (degrees)                                                                                                                                                         | `bin[7] × 1e-4` |
+| `dec_pointing`      | float (degrees)                                                                                                                                                         | `bin[8] × 1e-4` |
+| `observation_start` | ISO 8601 datetime string                                                                                                                                                | `bin[5]`, `bin[6]` |
+| `observation_stop`  | ISO 8601 datetime string                                                                                                                                                | `bin[10]`, `bin[11]` |
+| `observation_livetime` | float (seconds)                                                                                                                                                         | `bin[9] × 1e-2` |
+| `ccd_readout_mode`  | `"Null"`, `"Short image"`, `"Long image"`, `"Piled-up Photodiode"`, `"Low Rate Photodiode"`, `"Windowed Timing"`, `"Photo-counting"`, `"Raw data"`, `"Bias map"`, `"Stop"` | `bin[12]` |
+| `ccd_waveform_id`   | integer (`50` or `60`)                                                                                                                                                  | `bin[13]` |
+| `bias`              | integer (ADU), or `None` if `mode ≠ 5`                                                                                                                                 | `bin[14]` |
 | `termination_condition` | `"Normal"`, `"Terminated by time"`, `"Terminated by snapshot"`, `"Terminated by entering SAA"`, `"LRPD-to-WT transition"`, `"WT-to-LRorPC transition"`                 | `bin[21]` |
-| `spectrum_fits_file`    | base64-encoded FITS file                                                                                                                                                | `bin[22–38]` URL string |
+| `spectrum_fits_file` | base64-encoded FITS file                                                                                                                                                | `bin[22–38]` URL string |

@@ -28,11 +28,11 @@ def parse_swift_xrt_sper(bin):
         # bin[7] = point_ra: RA of the XRT pointing direction (J2000 epoch).
         # Stored as an integer in units of 0.0001-deg (fl.pt. degrees * 10000).
         # Divide by 10000 to recover degrees.
-        "pointing_ra": bin[7] * 1e-4,
+        "ra_pointing": bin[7] * 1e-4,
 
         # bin[8] = point_dec: Dec of the XRT pointing direction (J2000 epoch).
         # Same encoding as point_ra. Divide by 10000 to recover degrees.
-        "pointing_dec": bin[8] * 1e-4,
+        "dec_pointing": bin[8] * 1e-4,
 
         # bin[9] = expo_time: total exposure time of the SPER integration.
         # Stored in units of 0.001-sec (fl.pt. seconds * 1000, then integerized).

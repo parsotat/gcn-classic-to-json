@@ -29,11 +29,11 @@ def parse_swift_xrt_thresh(bin):
         # bin[7] = bore_ra: RA of the XRT boresight (center of the XRT FOV), J2000 epoch.
         # Stored as an integer in units of 0.0001-deg (fl.pt. degrees * 10000).
         # Divide by 10000 to recover degrees.
-        "pointing_ra": bin[7] * 1e-4,
+        "ra_pointing": bin[7] * 1e-4,
 
         # bin[8] = bore_dec: Dec of the XRT boresight (center of the XRT FOV), J2000 epoch.
         # Same encoding as bore_ra. Divide by 10000 to recover degrees.
-        "pointing_dec": bin[8] * 1e-4,
+        "dec_pointing": bin[8] * 1e-4,
 
         # bin[9] = live_time: total exposure time duration of the thresholded pixels
         # accumulation. Stored in units of 0.001-sec (fl.pt. seconds * 1000, then
