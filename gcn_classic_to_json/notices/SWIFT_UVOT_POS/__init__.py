@@ -94,7 +94,7 @@ def parse(bin):
         "mag_error": bin[20] * 1e-2,
 
         #added system info to the json
-        "mag_system": "Vega"
+        "mag_system": "Vega",
 
         # bin[10] = filter: integer identifier of the UVOT filter used for the observation.
         # Decoded via the filters lookup dictionary.
