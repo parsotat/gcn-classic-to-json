@@ -46,5 +46,6 @@ def parse(bin):
         "trigger_index": bin[17],
 
         "merit_value": bin[38] * 1e-2,
-        "additional_info": comments if comments else None,
+        #"additional_info": comments if comments else None,
+        "alert_tense": "current",
     }
