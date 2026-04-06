@@ -65,7 +65,8 @@ def convert_notice(binary_path, json_path, gromain_log):
     parsed_dict=notices.parse(value)
 
     #after parsing the binary notices, we need to determine if there are attachments that need to be encoded in the json
-    if "url" in parsed_dict.keys() or "fits_file_url" in parsed_dict.keys():
+    #if "fits" in parsed_dict.keys() or "fits_file" in parsed_dict.keys():
+    if any("fits" in key for key in parsed_dict):
         email_script=get_tmp_email_script(binary_path, gromain_log)
         attachments=get_email_attachments(email_script)
         attach_files(parsed_dict, attachments)
@@ -81,25 +82,31 @@ def convert_notice(binary_path, json_path, gromain_log):
 def attach_files(binary_dict, attachment_list):
     log = logging.getLogger(__name__)
 
-    #remove the filename attachment
-    if "url" in binary_dict.keys():
-        #binary_dict.pop("url")
-        log.debug(f'In attach_files, the url from the dict is: {binary_dict["url"]}')
-    elif "fits_file_url" in binary_dict.keys():
-        #binary_dict.pop("fits_file_url")
-        log.debug(f'In attach_files, the url from the dict is: {binary_dict["fits_file_url"]}')
-    else:
-        log.debug(f"In attach_files, but somehow cannot remove the url from the dict: {binary_dict}")
-        raise KeyError(f"In attach_files, but somehow cannot remove url from the dict: {binary_dict}")
+    #remove the filename attachment, first get the key
+    attachment_key=[key for key in binary_dict if "fits" in key]
 
-    #add a new key to hold a dict with the fits files attachments
-    binary_dict["data"]={}
+    #if the length of the array is 0, we have an issue so throw error. We can have more than 1 since some notices have
+    #raw and processed files that can be attached
+    if len(attachment_key)==0:
+        log.debug(f'In attach_files, the dict has no fits file attachments but is somehow in the attach_files function.')
 
-    # iterate through the list of attachments and read them into the binary dict
-    for attachment in attachment_list:
-        log.debug(f"Encoding attachment {attachment}.")
-        with open(attachment, "rb") as file:
-            binary_dict["data"][f"{attachment.name}"] = base64.b64encode(file.read()).decode("utf-8")
+    #if we have any keys that are boolean types just exit without modifying anything. If we have a None, just ignore it
+    #if we have a string, overwrite it with the data
+    for key in attachment_key:
+        if isinstance(binary_dict[key], str):
+            log.debug(f'In attach_files, the url from the dict is: {binary_dict[key]}')
+
+            #add a new key to hold a dict with the fits files attachments
+            binary_dict[key]={}
+
+            # iterate through the list of attachments and read them into the binary dict
+            for attachment in attachment_list:
+                log.debug(f"Encoding attachment {attachment}.")
+                with open(attachment, "rb") as file:
+                    binary_dict[key][f"{attachment.name}"] = base64.b64encode(file.read()).decode("utf-8")
+
+        #if we want, can modify the raw/processed parameters here based on their type
+
 
 
 def get_tmp_email_script(binary_path, gromain_log):
