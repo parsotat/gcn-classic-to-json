@@ -18,6 +18,7 @@ import numpy as np
 from gcn import NoticeType
 from gcn_classic_to_json import notices
 from gcn_classic_to_json.json import dumps
+from gcn_classic_to_json.utils import get_timenow
 
 
 import signal
@@ -30,6 +31,26 @@ def handler(signum, frame):
 
 signal.signal(signal.SIGINT, handler)
 
+_GLOBAL_NOTICE_COUNTER={
+    "bat":{
+        "position": 0,
+        "lightcurve": 0,
+        "scaled_map": 0,
+    },
+    "xrt":{
+        "position": 0,
+        "lightcurve": 0,
+        "spectrum": 0,
+        "image": 0,
+        "thresholded_pixels": 0,
+        "sper": 0,
+    },
+    "uvot":{
+        "position": 0,
+        "source_list": 0,
+        "image": 0,
+    },
+}
 
 def cli():
     parser = argparse.ArgumentParser(description='Process 160 byte binary packets and convert to JSON.')
@@ -58,6 +79,63 @@ def cli():
     args = parser.parse_args()
     return args
 
+def reset_global_notice_counter():
+    for key in _GLOBAL_NOTICE_COUNTER:
+        _GLOBAL_NOTICE_COUNTER[key]=0
+
+def classic_to_json_remapping(parsed_dict):
+    instrument_key=None
+    global_counter_key=None
+    notice_type=parsed_dict["notice_type"]
+
+    if "BAT" in notice_type:
+        instrument_key="bat"
+        if "POS" in notice_type:
+            #QL and POS go here
+            global_counter_key="position"
+        elif "LC" in notice_type:
+            global_counter_key="lightcurve"
+        else:
+            global_counter_key="scaled_map"
+
+    elif "UVOT" in notice_type:
+        instrument_key="uvot"
+
+        #note non PROC and PROC versions get grouped
+        if "FCHART" in notice_type:
+            global_counter_key = "source_list"
+        elif "DBURST" in notice_type:
+            global_counter_key = "image"
+        else:
+            global_counter_key = "position"
+
+    elif "XRT" in notice_type:
+        instrument_key="xrt"
+        if "SPER" in notice_type:
+            global_counter_key="sper"
+        elif "IMAGE" in notice_type:
+            # note non PROC and PROC versions get grouped
+            global_counter_key = "image"
+        elif "SPECTRUM" in notice_type:
+            # note non PROC and PROC versions get grouped
+            global_counter_key = "spectrum"
+        elif "LC" in notice_type:
+            global_counter_key = "lightcurve"
+        else:
+            global_counter_key = "thresholded_pixels"
+
+
+    if _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] > 0:
+        parsed_dict["alert_type"] = "update"
+    else:
+        parsed_dict["alert_type"] = "initial"
+
+    parsed_dict["notice_type"] = f"{instrument_key}.{global_counter_key}"
+
+    _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] += 1
+
+
+
 def convert_notice(binary_path, json_path, gromain_log):
     log = logging.getLogger(__name__)
 
@@ -72,6 +150,11 @@ def convert_notice(binary_path, json_path, gromain_log):
         attach_files(parsed_dict, attachments)
         log.info(f"Done attaching files for the notice.")
 
+    #add in the global alert type, alert tense, record number
+    classic_to_json_remapping(parsed_dict)
+
+    #add in the alert_datetime field (though we are slightly earlier than when we actually send off the json
+    parsed_dict["alert_datetime"]=get_timenow()
 
     actual_str = dumps(parsed_dict, indent=2)
 

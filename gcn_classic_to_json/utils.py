@@ -88,3 +88,6 @@ def breakdown_obsnum(binary_value):
 
 
     return target_id, segment
+
+def get_timenow():
+    return f"{Time.now().isot}Z"
