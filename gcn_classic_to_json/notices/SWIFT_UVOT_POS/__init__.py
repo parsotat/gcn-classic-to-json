@@ -86,12 +86,12 @@ def parse(bin):
         # bin[9] = burst_mag: magnitude of the burst/afterglow in the specified filter.
         # Stored in centi-mag (fl.pt. magnitude * 100, then integerized).
         # Divide by 100 to recover magnitude.
-        "magnitude": bin[9] * 1e-2,
+        "mag": bin[9] * 1e-2,
 
         # bin[20] = mag_error: uncertainty in the magnitude value (in the specified filter).
         # Stored in centi-mag (fl.pt. mag_error * 100, then integerized).
         # Divide by 100 to recover magnitude error.
-        "magnitude_error": bin[20] * 1e-2,
+        "mag_error": bin[20] * 1e-2,
 
         # bin[10] = filter: integer identifier of the UVOT filter used for the observation.
         # Decoded via the filters lookup dictionary.
