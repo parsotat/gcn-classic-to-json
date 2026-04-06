@@ -84,56 +84,61 @@ def reset_global_notice_counter():
         _GLOBAL_NOTICE_COUNTER[key]=0
 
 def classic_to_json_remapping(parsed_dict):
+    log = logging.getLogger(__name__)
+
     instrument_key=None
     global_counter_key=None
-    notice_type=parsed_dict["notice_type"]
 
-    if "BAT" in notice_type:
-        instrument_key="bat"
-        if "POS" in notice_type:
-            #QL and POS go here
-            global_counter_key="position"
-        elif "LC" in notice_type:
-            global_counter_key="lightcurve"
+    try:
+        notice_type=parsed_dict["notice_type"]
+
+        if "BAT" in notice_type:
+            instrument_key="bat"
+            if "POS" in notice_type:
+                #QL and POS go here
+                global_counter_key="position"
+            elif "LC" in notice_type:
+                global_counter_key="lightcurve"
+            else:
+                global_counter_key="scaled_map"
+
+        elif "UVOT" in notice_type:
+            instrument_key="uvot"
+
+            #note non PROC and PROC versions get grouped
+            if "FCHART" in notice_type:
+                global_counter_key = "source_list"
+            elif "DBURST" in notice_type:
+                global_counter_key = "image"
+            else:
+                global_counter_key = "position"
+
+        elif "XRT" in notice_type:
+            instrument_key="xrt"
+            if "SPER" in notice_type:
+                global_counter_key="sper"
+            elif "IMAGE" in notice_type:
+                # note non PROC and PROC versions get grouped
+                global_counter_key = "image"
+            elif "SPECTRUM" in notice_type:
+                # note non PROC and PROC versions get grouped
+                global_counter_key = "spectrum"
+            elif "LC" in notice_type:
+                global_counter_key = "lightcurve"
+            else:
+                global_counter_key = "thresholded_pixels"
+
+
+        if _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] > 0:
+            parsed_dict["alert_type"] = "update"
         else:
-            global_counter_key="scaled_map"
+            parsed_dict["alert_type"] = "initial"
 
-    elif "UVOT" in notice_type:
-        instrument_key="uvot"
+        parsed_dict["notice_type"] = f"{instrument_key}.{global_counter_key}"
 
-        #note non PROC and PROC versions get grouped
-        if "FCHART" in notice_type:
-            global_counter_key = "source_list"
-        elif "DBURST" in notice_type:
-            global_counter_key = "image"
-        else:
-            global_counter_key = "position"
-
-    elif "XRT" in notice_type:
-        instrument_key="xrt"
-        if "SPER" in notice_type:
-            global_counter_key="sper"
-        elif "IMAGE" in notice_type:
-            # note non PROC and PROC versions get grouped
-            global_counter_key = "image"
-        elif "SPECTRUM" in notice_type:
-            # note non PROC and PROC versions get grouped
-            global_counter_key = "spectrum"
-        elif "LC" in notice_type:
-            global_counter_key = "lightcurve"
-        else:
-            global_counter_key = "thresholded_pixels"
-
-
-    if _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] > 0:
-        parsed_dict["alert_type"] = "update"
-    else:
-        parsed_dict["alert_type"] = "initial"
-
-    parsed_dict["notice_type"] = f"{instrument_key}.{global_counter_key}"
-
-    _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] += 1
-
+        _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] += 1
+    except KeyError as e:
+        log.debug(f"The converted notice does not have a notice_type key to modify.")
 
 
 def convert_notice(binary_path, json_path, gromain_log):
