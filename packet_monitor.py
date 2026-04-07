@@ -80,9 +80,19 @@ def cli():
     args = parser.parse_args()
     return args
 
+def _reset_nested_dict(input_dict):
+
+    for key, value in input_dict.items():
+        # Check if the current value is another dictionary
+        if isinstance(value, dict):
+            # If it is, recurse deeper into that dictionary
+            reset_global_notice_counter(value)
+        else:
+            # If it's a leaf node (not a dict), set it to 0
+            input_dict[key] = 0
+
 def reset_global_notice_counter():
-    for key in _GLOBAL_NOTICE_COUNTER:
-        _GLOBAL_NOTICE_COUNTER[key]=0
+    _reset_nested_dict(_GLOBAL_NOTICE_COUNTER)
 
 def classic_to_json_remapping(parsed_dict):
     log = logging.getLogger(__name__)
