@@ -205,7 +205,7 @@ def attach_files(binary_dict, attachment_list):
     #if we have a string, overwrite it with the data
     for key in attachment_key:
         if isinstance(binary_dict[key], str):
-            log.debug(f'In attach_files, the url from the dict is: {binary_dict[key]}')
+            log.debug(f'In attach_files, the url from the dict is: {binary_dict[key]} and the key is {key}')
 
             #add a new key to hold a dict with the fits files attachments
             binary_dict[key]={}

@@ -74,6 +74,7 @@ def parse_swift_xrt_spec(bin):
         #   5 = Low Rate Photodiode, 6 = Windowed Timing, 7 = Photo-counting,
         #   8 = Raw data, 9 = Bias map, 10 = Stop.
         # Mapped to a human-readable string via mode_dict.
+        # there are only 2 types spectra given by the readout mode: LRPD or WT
         "ccd_readout_mode": mode_dict[bin[12]],
 
         # bin[13] = waveform: CCD waveform ID. Values are either 50 or 60.
