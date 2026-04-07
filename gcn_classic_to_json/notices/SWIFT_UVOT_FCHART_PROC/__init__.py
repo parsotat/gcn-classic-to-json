@@ -111,16 +111,18 @@ def parse_uvot_srclist(bin):
         # FITS file rather than a URL string.
         # Only populated for the raw flight notice (type=73, misc bit 2^30 = 0).
         # Set to None for the ground-processed notice (type=80, misc bit 2^30 = 1).
-        "raw_source_list_fits_file": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}" if not
-        misc_status[30] else None,
+        #"raw_source_list_fits_file": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}" if not misc_status[30] else None,
 
         # bin[22-38] = url: filename portion of the URL pointing to the ground-processed
         # source list FITS file. Same URL field and encoding as raw_source_list_fits_file
         # above, but populated only for the ground-processed notice (type=80,
         # misc bit 2^30 = 1).
         # Set to None for the raw flight notice (type=73, misc bit 2^30 = 0).
-        "processed_source_list_fits_files": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}" if
-        misc_status[30] else None,
+        #"processed_source_list_fits_files": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}" if misc_status[30] else None,
+
+        #just have 1 key in the dict for the source list fits files regardless of raw or processed, at a higher level we
+        # tell the user if this is initial or updated
+        "source_list_fits_files": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}"
 
         # --- Fields present in the UVOT_SRCLIST packet but NOT in the
         # misc_status.uvot.source_list schema ---

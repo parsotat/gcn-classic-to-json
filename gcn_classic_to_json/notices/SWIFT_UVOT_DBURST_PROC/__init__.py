@@ -121,15 +121,17 @@ def parse_uvot_image(bin):
         # FITS file rather than a URL string.
         # Only populated for the raw flight notice (type=72, misc bit 2^30 = 0).
         # Set to None for the ground-processed notice (type=79, misc bit 2^30 = 1).
-        "raw_image_fits_file": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}" if not
-        misc_bits[30] else None,
+        #"raw_image_fits_file": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}" if not misc_bits[30] else None,
 
         # bin[22-38] = url: filename portion of the URL pointing to the ground-processed
         # UVOT image FITS file. Same URL field and encoding as raw_image_fits_file above,
         # but populated only for the ground-processed notice (type=79, misc bit 2^30 = 1).
         # Set to None for the raw flight notice (type=72, misc bit 2^30 = 0).
-        "processed_image_fits_file": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}" if
-        misc_bits[30] else None,
+        #"processed_image_fits_file": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}" if misc_bits[30] else None,
+
+        # just have 1 key in the dict for the image fits files regardless of raw or processed, at a higher level we
+        # tell the user if this is initial or updated
+        "image_fits_files": f"http://gcn.gsfc.nasa.gov/gcn/notices_s/{''.join([i.decode('utf-8') for i in bin[22:39].view('c')])}"
 
         # --- Fields present in the UVOT_IMAGE packet but NOT in the
         # swift.uvot.image schema ---
