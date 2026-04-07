@@ -101,7 +101,7 @@ def parse(bin):
         # Filter values:
         #   0=Blocked, 1=UV_Grism, 2=UVW2, 3=V, 4=UVM2, 5=Vis_Grism,
         #   6=UVW1, 7=U, 8=Magnifier, 9=B, 10=White, 11=unknown
-        "filter": [filters[bin[10]]],
+        "filter": filters[bin[10]],
 
         # bin[21] = uvot-xrt: angular distance between the UVOT position and the XRT
         # position. Stored in units of 0.0001-deg (fl.pt. degrees * 10000, then integerized).

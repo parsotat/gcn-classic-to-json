@@ -20,6 +20,7 @@ from gcn_classic_to_json import notices
 from gcn_classic_to_json.json import dumps
 from gcn_classic_to_json.utils import get_timenow
 
+from gcn_classic_to_json.notices.SWIFT_UVOT_POS import filters
 
 import signal
 
@@ -40,15 +41,15 @@ _GLOBAL_NOTICE_COUNTER={
     "xrt":{
         "position": 0,
         "lightcurve": 0,
-        "spectrum": 0,
+        "spectrum": {1:0,2:0},
         "image": 0,
         "thresholded_pixels": 0,
         "sper": 0,
     },
     "uvot":{
         "position": 0,
-        "source_list": 0,
-        "image": 0,
+        "source_list": dict.fromkeys(filters,0),
+        "image": dict.fromkeys(filters,0),
     },
 }
 
@@ -88,6 +89,7 @@ def classic_to_json_remapping(parsed_dict):
 
     instrument_key=None
     global_counter_key=None
+    filter_key=None
 
     try:
         notice_type=parsed_dict["notice_type"]
@@ -108,8 +110,10 @@ def classic_to_json_remapping(parsed_dict):
             #note non PROC and PROC versions get grouped
             if "FCHART" in notice_type:
                 global_counter_key = "source_list"
+                filter_key = parsed_dict["filter"]
             elif "DBURST" in notice_type:
                 global_counter_key = "image"
+                filter_key = parsed_dict["filter"]
             else:
                 global_counter_key = "position"
 
@@ -123,6 +127,7 @@ def classic_to_json_remapping(parsed_dict):
             elif "SPECTRUM" in notice_type:
                 # note non PROC and PROC versions get grouped
                 global_counter_key = "spectrum"
+                filter_key=int(list(parsed_dict["spectrum_fits_file"].keys())[0].removesuffix(".fits")[-1])
             elif "LC" in notice_type:
                 global_counter_key = "lightcurve"
             elif "POS" in notice_type:
@@ -130,15 +135,21 @@ def classic_to_json_remapping(parsed_dict):
             else:
                 global_counter_key = "thresholded_pixels"
 
+        if filter_key is None:
+            counter = _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key]
+            _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] += 1
+        else:
+            counter = _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key][filter_key]
+            _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key][filter_key] += 1
 
-        if _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] > 0:
+        if counter> 0:
             parsed_dict["alert_type"] = "update"
         else:
             parsed_dict["alert_type"] = "initial"
 
         parsed_dict["notice_type"] = f"{instrument_key}.{global_counter_key}"
 
-        _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] += 1
+
     except KeyError as e:
         log.debug(f"The converted notice does not have a notice_type key to modify.")
 
