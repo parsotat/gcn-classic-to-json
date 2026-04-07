@@ -67,7 +67,7 @@ def parse_uvot_srclist(bin):
         # Filter values:
         #   0=Blocked, 1=UV_Grism, 2=UVW2, 3=V, 4=UVM2, 5=Vis_Grism,
         #   6=UVW1, 7=U, 8=Magnifier, 9=B, 10=White, 11=unknown
-        "filter": [filters[bin[10]]],
+        "filter": filters[bin[10]],
 
         # bin[11] = bkg_mean: mean value of the background level in the exposure.
         # Stored as a floating point quantity multiplied by 1000 and then integerized
