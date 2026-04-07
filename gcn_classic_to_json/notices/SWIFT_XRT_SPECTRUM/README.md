@@ -13,6 +13,8 @@
 > ground-processed form (type=77), and `misc` bit $$2^{24}$$, which is not assigned
 > for type=68 but indicates a processing error in the ground-processed spectrum FITS
 > file for type=77.
+> 
+> Additionally, there are 2 spectrum types based on the CCD readout mode: LRPD or WT.
 
 ---
 

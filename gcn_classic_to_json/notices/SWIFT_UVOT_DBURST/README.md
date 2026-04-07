@@ -148,26 +148,25 @@ otherwise noted.
 > search. The fields below are inferred from the packet definition, the schema listing
 > \ue202turn0file3, and by analogy with the closely related `swift.uvot.source_list` schema.
 
-| Field                       | Type / Example                      | Source | Notes |
-|-----------------------------|-------------------------------------|--------|-------|
-| `alert_datetime`            | ISO 8601 string                     | GCN metadata | |
-| `alert_tense`               | `"current"` or `"test"`             | GCN metadata | |
-| `alert_type`                | `"initial"` or `"update"`           | `misc` $$2^{30}$$: `"initial"` for type=72; `"update"` for type=79 | |
-| `mission`                   | `"Swift"`                           | Fixed constant | |
-| `instrument`                | `"UVOT"`                            | Fixed constant | |
-| `id`                        | integer trigger ID                  | `bin[4]` lower 24 bits | |
-| `observation_start`         | ISO 8601 datetime string            | `bin[5]` (`ExpStart_tjd`), `bin[6]` (`ExpStart_sod`) | |
-| `ra_pointing`               | float (degrees)                     | `bin[7] × 1e-4` | Spacecraft pointing direction RA (J2000) |
-| `dec_pointing`              | float (degrees)                     | `bin[8] × 1e-4` | Spacecraft pointing direction Dec (J2000) |
-| `roll`                      | float (degrees)                     | `bin[9] × 1e-4` | |
-| `filter`                    | string, e.g. `"White"`              | `filters[bin[10]]` | |
-| `exposure_id`               | integer (spacecraft seconds)        | `bin[11]` | |
-| `image_offset`              | `[X0, Y0]` (det-coords)             | `[bin[12], bin[13]]` | Coordinates of pixel_zero in the Image subarray |
-| `image_size`                | `[width, height]` (det-coords)      | `[bin[14], bin[15]]` | Dimensions of the Image subarray |
-| `grb_position`              | `[x_pos, y_pos]` (det-coords)       | decoded from `bin[16]` (`xy_grb`, two packed integers) | Position in unbinned detector coordinates |
-| `grb_position_source`       | string                              | `grb_position_sources[misc_bits[28]]` | `"XRT_position"` or `"window_position"` |
-| `n_frames`                  | integer                             | `bin[17]` | Total read-out frames in this image |
-| `pixel_binning`             | string, e.g. `"2x2"`               | decoded from `misc` bits $$2^{0}$$–$$2^{3}$$ | |
-| `watchdog_timeout`          | bool                                | `misc` $$2^{29}$$ | |
-| `raw_image_fits_file`       | base64-encoded FITS file or `None`  | `bin[22–38]` URL string if `misc` $$2^{30}$$ = 0 (type=72); else `None` | |
-| `processed_image_fits_file` | base64-encoded FITS file or `None`  | `bin[22–38]` URL string if `misc` $$2^{30}$$ = 1 (type=79); else `None` | |
+| Field                   | Type / Example                      | Source                                                             | Notes |
+|-------------------------|-------------------------------------|--------------------------------------------------------------------|-------|
+| `alert_datetime`        | ISO 8601 string                     | GCN metadata                                                       | |
+| `alert_tense`           | `"current"` or `"test"`             | GCN metadata                                                       | |
+| `alert_type`            | `"initial"` or `"update"`           | `misc` $$2^{30}$$: `"initial"` for type=72; `"update"` for type=79 | |
+| `mission`               | `"Swift"`                           | Fixed constant                                                     | |
+| `instrument`            | `"UVOT"`                            | Fixed constant                                                     | |
+| `id`                    | integer trigger ID                  | `bin[4]` lower 24 bits                                             | |
+| `observation_start`     | ISO 8601 datetime string            | `bin[5]` (`ExpStart_tjd`), `bin[6]` (`ExpStart_sod`)               | |
+| `ra_pointing`           | float (degrees)                     | `bin[7] × 1e-4`                                                    | Spacecraft pointing direction RA (J2000) |
+| `dec_pointing`          | float (degrees)                     | `bin[8] × 1e-4`                                                    | Spacecraft pointing direction Dec (J2000) |
+| `roll`                  | float (degrees)                     | `bin[9] × 1e-4`                                                    | |
+| `filter`                | string, e.g. `"White"`              | `filters[bin[10]]`                                                 | |
+| `exposure_id`           | integer (spacecraft seconds)        | `bin[11]`                                                          | |
+| `image_offset`          | `[X0, Y0]` (det-coords)             | `[bin[12], bin[13]]`                                               | Coordinates of pixel_zero in the Image subarray |
+| `image_size`            | `[width, height]` (det-coords)      | `[bin[14], bin[15]]`                                               | Dimensions of the Image subarray |
+| `grb_position`          | `[x_pos, y_pos]` (det-coords)       | decoded from `bin[16]` (`xy_grb`, two packed integers)             | Position in unbinned detector coordinates |
+| `grb_position_source`   | string                              | `grb_position_sources[misc_bits[28]]`                              | `"XRT_position"` or `"window_position"` |
+| `n_frames`              | integer                             | `bin[17]`                                                          | Total read-out frames in this image |
+| `pixel_binning`         | string, e.g. `"2x2"`               | decoded from `misc` bits $$2^{0}$$–$$2^{3}$$                       | |
+| `watchdog_timeout`      | bool                                | `misc` $$2^{29}$$                                                  | |
+| `image_fits_file`       | base64-encoded FITS file or `None`  | `bin[22–38]` URL string for both the raw and processed fits files  | |

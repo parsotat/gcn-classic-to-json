@@ -129,25 +129,24 @@ otherwise noted.
 
 ## swift.uvot.source_list JSON Schema Fields
 
-| Field                              | Type / Example                    | Source | Notes |
-|------------------------------------|-----------------------------------|--------|-------|
-| `alert_datetime`                   | ISO 8601 string                   | GCN metadata | |
-| `alert_tense`                      | `"current"` or `"test"`           | GCN metadata | |
-| `alert_type`                       | `"initial"` or `"update"`         | `misc` $$2^{30}$$: `"initial"` for type=73; `"update"` for type=80 | |
-| `mission`                          | `"Swift"`                         | Fixed constant | |
-| `instrument`                       | `"UVOT"`                          | Fixed constant | |
-| `id`                               | integer trigger ID                | `bin[4]` lower 24 bits | |
-| `ra_pointing`                      | float (degrees)                   | `bin[7] × 1e-4` | Spacecraft pointing direction RA (J2000) |
-| `dec_pointing`                     | float (degrees)                   | `bin[8] × 1e-4` | Spacecraft pointing direction Dec (J2000) |
-| `roll`                             | float (degrees)                   | `bin[9] × 1e-4` | |
-| `observation_start`                | ISO 8601 datetime string          | `bin[5]` (`expo_start_tjd`), `bin[6]` (`expo_start_sod`) | |
-| `filter`                           | string, e.g. `"White"`            | `filters[bin[10]]` | |
-| `background_mean`                  | float                             | `bin[11] × 1e-3` | |
-| `image_extent`                     | `[x_max, y_max]` (det-coords)     | `[bin[12], bin[13]]` | Maximum extent of image window |
-| `image_offset`                     | `[x_offset, y_offset]` (det-coords) | `[bin[15], bin[16]]` | Image window origin in detector coordinates |
-| `n_stars`                          | integer                           | `bin[14]` | Total number of sources in source list |
-| `detection_threshold`              | integer (DN)                      | `bin[17]` | |
-| `photometry_threshold`             | integer (DN)                      | `bin[18]` | |
-| `watchdog_timeout`                 | bool                              | `misc` $$2^{29}$$ | |
-| `raw_source_list_fits_file`        | base64-encoded FITS file or `None` | `bin[22–38]` URL string if `misc` $$2^{30}$$ = 0 (type=73); else `None` | |
-| `processed_source_list_fits_files` | base64-encoded FITS file or `None` | `bin[22–38]` URL string if `misc` $$2^{30}$$ = 1 (type=80); else `None` | |
+| Field                    | Type / Example                    | Source                                                                  | Notes |
+|--------------------------|-----------------------------------|-------------------------------------------------------------------------|-------|
+| `alert_datetime`         | ISO 8601 string                   | GCN metadata                                                            | |
+| `alert_tense`            | `"current"` or `"test"`           | GCN metadata                                                            | |
+| `alert_type`             | `"initial"` or `"update"`         | `misc` $$2^{30}$$: `"initial"` for type=73; `"update"` for type=80      | |
+| `mission`                | `"Swift"`                         | Fixed constant                                                          | |
+| `instrument`             | `"UVOT"`                          | Fixed constant                                                          | |
+| `id`                     | integer trigger ID                | `bin[4]` lower 24 bits                                                  | |
+| `ra_pointing`            | float (degrees)                   | `bin[7] × 1e-4`                                                         | Spacecraft pointing direction RA (J2000) |
+| `dec_pointing`           | float (degrees)                   | `bin[8] × 1e-4`                                                         | Spacecraft pointing direction Dec (J2000) |
+| `roll`                   | float (degrees)                   | `bin[9] × 1e-4`                                                         | |
+| `observation_start`      | ISO 8601 datetime string          | `bin[5]` (`expo_start_tjd`), `bin[6]` (`expo_start_sod`)                | |
+| `filter`                 | string, e.g. `"White"`            | `filters[bin[10]]`                                                      | |
+| `background_mean`        | float                             | `bin[11] × 1e-3`                                                        | |
+| `image_extent`           | `[x_max, y_max]` (det-coords)     | `[bin[12], bin[13]]`                                                    | Maximum extent of image window |
+| `image_offset`           | `[x_offset, y_offset]` (det-coords) | `[bin[15], bin[16]]`                                                    | Image window origin in detector coordinates |
+| `n_stars`                | integer                           | `bin[14]`                                                               | Total number of sources in source list |
+| `detection_threshold`    | integer (DN)                      | `bin[17]`                                                               | |
+| `photometry_threshold`   | integer (DN)                      | `bin[18]`                                                               | |
+| `watchdog_timeout`       | bool                              | `misc` $$2^{29}$$                                                       | |
+| `source_list_fits_files` | base64-encoded FITS file or `None` | `bin[22–38]` URL string for both raw and processed files                | |
