@@ -17,6 +17,14 @@ def parse(bin):
     misc_bits = np.unpackbits(bin[19:20].view(dtype=np.uint8), bitorder='little')
 
     return {
+        # Fixed string constant identifying the mission. Listed explicitly as a schema field
+        # in swift.xrt.thresholded_pixels with the value "Swift".
+        "mission": "SWIFT",
+
+        # Fixed string constant identifying the instrument. Listed explicitly as a schema field
+        # in swift.xrt.thresholded_pixels with the value "XRT".
+        "instrument": "XRT",
+
         # bin[4] = trig_obs_num: lower 24 bits = Trigger number, upper 8 bits = Observation number.
         # Assigned by the on-board BAT flight software to uniquely identify each trigger.
         "id": [bin[4]],

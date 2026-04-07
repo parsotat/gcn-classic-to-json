@@ -125,6 +125,8 @@ def classic_to_json_remapping(parsed_dict):
                 global_counter_key = "spectrum"
             elif "LC" in notice_type:
                 global_counter_key = "lightcurve"
+            elif "POS" in notice_type:
+                global_counter_key = "position"
             else:
                 global_counter_key = "thresholded_pixels"
 
