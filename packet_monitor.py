@@ -66,7 +66,8 @@ def cli():
     parser.add_argument('--gcn_domain', required=False, type=str, default="test.gcn.nasa.gov", help='gcn domain where the json notices will be sent via Kafka. Either the test or the prod sites.')
     parser.add_argument('--gcn_producer_client_id', required=False, type=str, default="", help='client ID to be able to produce/send json notices via Kafka.')
     parser.add_argument('--gcn_producer_client_secret', required=False, type=str, default="", help='client secret to be able to produce/send json notices via Kafka.')
-
+    parser.add_argument('--archival', action='store_true',
+                        help="This sets the alert_type for the json notices to be archival, not current.")
 
     # parser.add_argument('--tmin', required=False, type=str, help='min time to start')
     # parser.add_argument('--tmax', required=False, type=str, help='max time to start')
@@ -98,7 +99,7 @@ def _reset_nested_dict(input_dict):
 def reset_global_notice_counter():
     _reset_nested_dict(_GLOBAL_NOTICE_COUNTER)
 
-def classic_to_json_remapping(parsed_dict):
+def classic_to_json_remapping(parsed_dict, is_archival=False):
     log = logging.getLogger(__name__)
 
     instrument_key=None
@@ -178,6 +179,12 @@ def classic_to_json_remapping(parsed_dict):
 
     except KeyError as e:
         log.debug(f"The converted notice does not have a notice_type key to modify.")
+
+    if is_archival:
+        try:
+            parsed_dict['alert_tense'] = "archival"
+        except KeyError as e:
+            log.debug(f"The converted notice does not have an alert_tense key to modify.")
 
 
 def convert_notice(binary_path, gromain_log):
