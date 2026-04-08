@@ -19,6 +19,7 @@ from gcn import NoticeType
 from gcn_classic_to_json import notices
 from gcn_classic_to_json.json import dumps
 from gcn_classic_to_json.utils import get_timenow
+from gcn_kafka import Producer
 
 from gcn_classic_to_json.notices.SWIFT_UVOT_POS import filters
 
@@ -62,6 +63,9 @@ def cli():
     parser.add_argument('--send_json', action='store_true',
                         help="This allows for the json notices to be sent via kafka.")
     parser.add_argument('--delta_t_max', required=False, type=int, default=60, help='Maximum amount of time to sleep in seconds between checking the datadir for new binary packets to convert to JSON')
+    parser.add_argument('--gcn_domain', required=False, type=str, default="test.gcn.nasa.gov", help='gcn domain where the json notices will be sent via Kafka. Either the test or the prod sites.')
+    parser.add_argument('--gcn_producer_client_id', required=False, type=str, default="", help='client ID to be able to produce/send json notices via Kafka.')
+    parser.add_argument('--gcn_producer_client_secret', required=False, type=str, default="", help='client secret to be able to produce/send json notices via Kafka.')
 
 
     # parser.add_argument('--tmin', required=False, type=str, help='min time to start')
@@ -157,6 +161,7 @@ def classic_to_json_remapping(parsed_dict):
         else:
             parsed_dict["alert_type"] = "initial"
 
+        #this gets parsed when sending the notice to know what topic to send to
         parsed_dict["notice_type"] = f"{instrument_key}.{global_counter_key}"
 
 
@@ -164,7 +169,7 @@ def classic_to_json_remapping(parsed_dict):
         log.debug(f"The converted notice does not have a notice_type key to modify.")
 
 
-def convert_notice(binary_path, json_path, gromain_log):
+def convert_notice(binary_path, gromain_log):
     log = logging.getLogger(__name__)
 
     value = binary_path.read_bytes()
@@ -183,6 +188,11 @@ def convert_notice(binary_path, json_path, gromain_log):
 
     #add in the alert_datetime field (though we are slightly earlier than when we actually send off the json
     #parsed_dict["alert_datetime"]=get_timenow() #maybe we dont need this?
+
+    return parsed_dict
+
+def save_converted_notice(parsed_dict, json_path):
+    log = logging.getLogger(__name__)
 
     actual_str = dumps(parsed_dict, indent=2)
 
@@ -309,6 +319,28 @@ def select_gromain_log(gromain_logdir):
     #select the latest one
     return gromain_logs[-1]
 
+def send_notice(parsed_dict, gcn_args):
+    producer = Producer(client_id=gcn_args.gcn_producer_client_id, client_secret=gcn_args.gcn_producer_client_secret, domain=gcn_args.gcn_domain)
+
+    #get the notice type from the dictionary that contains the key/values for the json notice
+    specific_topic=parsed_dict.pop("notice_type")
+
+    # Choose the right topic for this notice.  If your mission has
+    # multiple topics, they all start with 'gcn.notices.mission.'
+    # If there is only one topic, it will be simply as follows:
+    topic = f'gcn.notices.swift.{specific_topic}'
+    
+    # JSON data converted to byte string format
+    data = json.dumps({
+        '$schema': 'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/mission/SchemaName.schema.json',
+        'key': 'value'
+    }).encode()
+
+    producer.produce(topic, data)
+    producer.flush()
+
+
+    return None
 
 def main(args):
     #go through the arguments
@@ -316,6 +348,7 @@ def main(args):
     logdir=Path(args.logdir)
     gromain_logdir=Path(args.gromain_logdir)
     max_t=args.delta_t_max
+
 
     #do some error checking
     if not datadir.exists():
@@ -420,7 +453,8 @@ def main(args):
                     #try to do the conversion but catch any errors and print them and move onto the next binary packet.
                     # if we raised an exception in this packet, then dont try to send anything
                     try:
-                        convert_notice(packet, json_conversion_file, gromain_log)
+                        parsed_dict=convert_notice(packet, gromain_log)
+                        save_converted_notice(parsed_dict, json_conversion_file)
                         was_converted=True
                     except Exception as e:
                         logging.debug(f"{type(e).__name__} Exception raised with message: {e}")
@@ -436,7 +470,9 @@ def main(args):
 
                     if args.send_json and was_converted:
                         #do something to actually send it off to gcn over kafka
+                        #how to keep track of whether a notice was actually sent out or not?
                         raise NotImplementedError
+                        send_notice(parsed_dict, args)
 
             sleep_time=1
             logging.info(f"Set sleep_time to {sleep_time} second.")
