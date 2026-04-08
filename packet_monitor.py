@@ -533,13 +533,10 @@ def main(args):
                             else:
                                 logging.info(f'Packet monitor determined that there is no previously saved json notice for packet {packet}.')
 
-
-
                         if was_converted:
                             logging.info(f'Packet monitor is sending out the json notice for packet {packet}.')
                         else:
-                            logging.info(f'Packet monitor is not attempting to send out the json notice for packet {packet}.')
-
+                            logging.info(f'Packet monitor is not attempting to send out any notice for packet {packet} as the conversion was unsuccessful.')
 
                     else:
                         was_converted=False
@@ -560,6 +557,8 @@ def main(args):
                         if was_sent:
                             #denote that the json was sent via a signal file
                             json_sent_file.touch()
+                            logging.info(f'Packet monitor has successfully sent out the json notice for packet {packet}.')
+
 
             sleep_time=1
             logging.info(f"Set sleep_time to {sleep_time} second.")
