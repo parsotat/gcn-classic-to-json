@@ -211,6 +211,13 @@ def save_converted_notice(parsed_dict, json_path):
         print(actual_str, file=f)
     log.info(f"Saved converted packet to {json_path}.")
 
+def read_converted_notice(json_path):
+    with open(json_path, "r") as f:
+        file_dict = json.load(f)
+
+    return file_dict
+
+
 def attach_files(binary_dict, attachment_list):
     log = logging.getLogger(__name__)
 
@@ -332,6 +339,8 @@ def select_gromain_log(gromain_logdir):
 
 def send_notice(parsed_dict, producer):
     log = logging.getLogger(__name__)
+    is_serialized=False
+    is_sent=False
 
     #get the notice type from the dictionary that contains the key/values for the json notice
     specific_topic=parsed_dict.pop("notice_type")
@@ -341,15 +350,22 @@ def send_notice(parsed_dict, producer):
     # If there is only one topic, it will be simply as follows:
     topic = f'gcn.notices.swift.{specific_topic}'
 
+    try:
+        # JSON data converted to byte string format
+        data = json.dumps(parsed_dict).encode()
+        is_serialized=True
+    except Exception as e:
+        log.debug("There was an error with serializing the parsed dictionary into a string.")
 
-    # JSON data converted to byte string format
-    data = json.dumps(parsed_dict).encode()
+    if is_serialized:
+        try:
+            producer.produce(topic, data)
+            producer.flush()
+            is_sent=True
+        except Exception as e:
+            log.debug("There was an error with actually sending the notice.")
 
-    producer.produce(topic, data)
-    producer.flush()
-
-
-    return None
+    return is_sent
 
 def main(args):
     #go through the arguments
@@ -392,8 +408,6 @@ def main(args):
             logging.debug(f"Creating the Kafka producer failed with this exception\n{e}")
             raise RuntimeError(f"Creating the Kafka producer failed with this exception\n{e}")
 
-
-        raise NotImplementedError
 
     #setup the log
     #logging.basicConfig(filename=logdir.joinpath(args.logname), level=logging.DEBUG,
@@ -440,8 +454,14 @@ def main(args):
         #exclude non-swift binary packets, see save_swift function in hete.c
         binary_packets = [i for i in binary_packets if "S" in i.name]
 
-        #exclude any packets with .json in the name or those that have .json counterparts
-        binary_packets=[i for i in binary_packets if "json" not in i.name and not (i.parent.joinpath(f"{i.name}.json").exists())]
+        if args.send_json:
+            # exclude any packets with .json in the name or those that have .json.sent counterparts. these imply that
+            # there are .json counterparts as well
+
+            binary_packets=[i for i in binary_packets if "json" not in i.name and not (i.parent.joinpath(f"{i.name}.json.sent").exists())]
+        else:
+            # exclude any packets with .json in the name or those that have .json counterparts
+            binary_packets=[i for i in binary_packets if "json" not in i.name and not (i.parent.joinpath(f"{i.name}.json").exists())]
 
         #exclude any packets that dont have a counterpart in the gcn NoticeTypes, need to loop over 2 things which isnt great
         #first extrac the packet type and then compare them to the gcn NoticeTypes
@@ -472,7 +492,9 @@ def main(args):
                     raise RuntimeError(f"The gromain log  {gromain_log} doesnt exist.")
 
             for packet in binary_packets:
+                was_converted=None
                 json_conversion_file=packet.parent.joinpath(f"{packet.name}.json")
+                json_sent_file = packet.parent.joinpath(f"{packet.name}.json.sent")
                 if not json_conversion_file.exists():
                     logging.info(f'Packet monitor converting {packet} to json.')
 
@@ -493,13 +515,51 @@ def main(args):
                             logging.debug(f"File {json_conversion_file} deleted successfully.")
                         else:
                             logging.debug(f"File {json_conversion_file} was not created.")
+                else:
+                    logging.info(f'Packet monitor already converted {packet} to json.')
+
+                if args.send_json:
+                    if not json_sent_file.exists():
+                        #if we have entered this set of code by looking at a notice that has been converted then set
+                        # was_converted=True, otherwise we use the previously determined was_converted value to decide
+                        # if the code has to read in the saved json file or not
+                        #if was_converted=True, the file exists and the data is in parsed_dict.
+                        #if was_converted=False from above try-except statement, there is no file
+                        if was_converted is None:
+                            was_converted=json_conversion_file.exists()
+                            if was_converted:
+                                logging.info(f'Packet monitor is attempting to read the previously saved json notice for packet {packet}.')
+                                parsed_dict=read_converted_notice(json_conversion_file)
+                            else:
+                                logging.info(f'Packet monitor determined that there is no previously saved json notice for packet {packet}.')
 
 
-                    if args.send_json and was_converted:
+
+                        if was_converted:
+                            logging.info(f'Packet monitor is sending out the json notice for packet {packet}.')
+                        else:
+                            logging.info(f'Packet monitor is not attempting to send out the json notice for packet {packet}.')
+
+
+                    else:
+                        was_converted=False
+                        logging.info(f'Packet monitor already sent out the json notice for packet {packet}.')
+
+
+                    if was_converted:
                         #do something to actually send it off to gcn over kafka
                         #how to keep track of whether a notice was actually sent out or not?
-                        raise NotImplementedError
-                        send_notice(parsed_dict, producer)
+                        was_sent=False
+                        try:
+                            #was_sent=send_notice(parsed_dict, producer)
+                            was_sent=True
+                        except Exception as e:
+                            logging.debug(f"{type(e).__name__} Exception raised with message: {e}")
+                            logging.debug(f"Unable to send json {packet} over kafka. Moving onto the next packet.")
+
+                        if was_sent:
+                            #denote that the json was sent via a signal file
+                            json_sent_file.touch()
 
             sleep_time=1
             logging.info(f"Set sleep_time to {sleep_time} second.")
