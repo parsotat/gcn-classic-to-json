@@ -556,7 +556,7 @@ def main(args):
                         was_sent=False
                         try:
                             #was_sent=send_notice(parsed_dict, producer)
-                            was_sent=True
+                            was_sent=False
                         except Exception as e:
                             logging.debug(f"{type(e).__name__} Exception raised with message: {e}")
                             logging.debug(f"Unable to send json {packet} over kafka. Moving onto the next packet.")
