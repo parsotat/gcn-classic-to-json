@@ -148,7 +148,10 @@ def classic_to_json_remapping(parsed_dict):
                 global_counter_key = "position"
             else:
                 global_counter_key = "thresholded_pixels"
+        else:
+            instrument_key=None
 
+        #POINTING direction is not included here so they produce key errors here
         if filter_key is None:
             counter = _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key]
             _GLOBAL_NOTICE_COUNTER[instrument_key][global_counter_key] += 1
@@ -163,6 +166,14 @@ def classic_to_json_remapping(parsed_dict):
 
         #this gets parsed when sending the notice to know what topic to send to
         parsed_dict["notice_type"] = f"{instrument_key}.{global_counter_key}"
+
+        # add in the schema name
+        #TODO: deal with pointing notices
+        if instrument_key is not None:
+            parsed_dict['$schema'] = f'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/swift/{instrument_key}/{global_counter_key}.schema.json'
+        else:
+            parsed_dict[
+                '$schema'] = f'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/swift/{global_counter_key}.schema.json'
 
 
     except KeyError as e:
@@ -319,8 +330,8 @@ def select_gromain_log(gromain_logdir):
     #select the latest one
     return gromain_logs[-1]
 
-def send_notice(parsed_dict, gcn_args):
-    producer = Producer(client_id=gcn_args.gcn_producer_client_id, client_secret=gcn_args.gcn_producer_client_secret, domain=gcn_args.gcn_domain)
+def send_notice(parsed_dict, producer):
+    log = logging.getLogger(__name__)
 
     #get the notice type from the dictionary that contains the key/values for the json notice
     specific_topic=parsed_dict.pop("notice_type")
@@ -329,12 +340,10 @@ def send_notice(parsed_dict, gcn_args):
     # multiple topics, they all start with 'gcn.notices.mission.'
     # If there is only one topic, it will be simply as follows:
     topic = f'gcn.notices.swift.{specific_topic}'
-    
+
+
     # JSON data converted to byte string format
-    data = json.dumps({
-        '$schema': 'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/mission/SchemaName.schema.json',
-        'key': 'value'
-    }).encode()
+    data = json.dumps(parsed_dict).encode()
 
     producer.produce(topic, data)
     producer.flush()
@@ -367,6 +376,23 @@ def main(args):
 
 
     if args.send_json:
+        #do some checks to make sure we have no empty strings
+        if len(args.gcn_producer_client_id)==0:
+            logging.debug("The gcn_producer_client_id value that was passed in is an empty string.")
+            raise ValueError("The gcn_producer_client_id value that was passed in is an empty string.")
+
+        if len(args.gcn_producer_client_secret)==0:
+            logging.debug("The gcn_producer_client_secret value that was passed in is an empty string.")
+            raise ValueError("The gcn_producer_client_secret value that was passed in is an empty string.")
+
+        try:
+            producer = Producer(client_id=args.gcn_producer_client_id,
+                                client_secret=args.gcn_producer_client_secret, domain=args.gcn_domain)
+        except Exception as e:
+            logging.debug(f"Creating the Kafka producer failed with this exception\n{e}")
+            raise RuntimeError(f"Creating the Kafka producer failed with this exception\n{e}")
+
+
         raise NotImplementedError
 
     #setup the log
@@ -459,6 +485,7 @@ def main(args):
                     except Exception as e:
                         logging.debug(f"{type(e).__name__} Exception raised with message: {e}")
                         logging.debug(f"Unable to convert {packet} to json. Moving onto the next packet.")
+                        was_converted = False
                         # want to remove a potential json conversion so this packet can be requeued in the
                         # next iteration of the while loop
                         if json_conversion_file.exists():
@@ -472,7 +499,7 @@ def main(args):
                         #do something to actually send it off to gcn over kafka
                         #how to keep track of whether a notice was actually sent out or not?
                         raise NotImplementedError
-                        send_notice(parsed_dict, args)
+                        send_notice(parsed_dict, producer)
 
             sleep_time=1
             logging.info(f"Set sleep_time to {sleep_time} second.")
