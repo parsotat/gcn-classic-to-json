@@ -359,7 +359,7 @@ def send_notice(parsed_dict, producer):
 
     try:
         # JSON data converted to byte string format
-        data = json.dumps(parsed_dict).encode()
+        data = dumps(parsed_dict).encode()
         is_serialized=True
     except Exception as e:
         log.debug(f"There was an error with serializing the parsed dictionary into a string: \n")
