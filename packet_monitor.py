@@ -362,7 +362,8 @@ def send_notice(parsed_dict, producer):
         data = json.dumps(parsed_dict).encode()
         is_serialized=True
     except Exception as e:
-        log.debug("There was an error with serializing the parsed dictionary into a string.")
+        log.debug(f"There was an error with serializing the parsed dictionary into a string: \n")
+        log.debug(f"{type(e).__name__} Exception raised with message: {e}")
 
     if is_serialized:
         try:
@@ -370,7 +371,8 @@ def send_notice(parsed_dict, producer):
             producer.flush()
             is_sent=True
         except Exception as e:
-            log.debug("There was an error with actually sending the notice.")
+            log.debug(f"There was an error with actually sending the notice: \n")
+            log.debug(f"{type(e).__name__} Exception raised with message: {e}")
 
     return is_sent
 
@@ -523,7 +525,7 @@ def main(args):
                         else:
                             logging.debug(f"File {json_conversion_file} was not created.")
                 else:
-                    logging.info(f'Packet monitor already converted {packet} to json.')
+                    logging.info(f'Packet monitor previously converted {packet} to json.')
 
                 if args.send_json:
                     if not json_sent_file.exists():
@@ -538,16 +540,16 @@ def main(args):
                                 logging.info(f'Packet monitor is attempting to read the previously saved json notice for packet {packet}.')
                                 parsed_dict=read_converted_notice(json_conversion_file)
                             else:
-                                logging.info(f'Packet monitor determined that there is no previously saved json notice for packet {packet}.')
+                                logging.debug(f'SHOULD NOT GET HERE. Packet monitor determined that there is no previously saved json notice for packet {packet}.')
 
                         if was_converted:
                             logging.info(f'Packet monitor is sending out the json notice for packet {packet}.')
                         else:
-                            logging.info(f'Packet monitor is not attempting to send out any notice for packet {packet} as the conversion was unsuccessful.')
+                            logging.debug(f'Packet monitor is not attempting to send out any notice for packet {packet} as the conversion was unsuccessful.')
 
                     else:
                         was_converted=False
-                        logging.info(f'Packet monitor already sent out the json notice for packet {packet}.')
+                        logging.debug(f'Packet monitor previously sent out the json notice for packet {packet}.')
 
 
                     if was_converted:
@@ -555,16 +557,16 @@ def main(args):
                         #how to keep track of whether a notice was actually sent out or not?
                         was_sent=False
                         try:
-                            #was_sent=send_notice(parsed_dict, producer)
-                            was_sent=False
+                            was_sent=send_notice(parsed_dict, producer)
                         except Exception as e:
                             logging.debug(f"{type(e).__name__} Exception raised with message: {e}")
-                            logging.debug(f"Unable to send json {packet} over kafka. Moving onto the next packet.")
 
                         if was_sent:
                             #denote that the json was sent via a signal file
                             json_sent_file.touch()
                             logging.info(f'Packet monitor has successfully sent out the json notice for packet {packet}.')
+                        else:
+                            logging.debug(f"Unable to send json {packet} over kafka. Moving onto the next packet.")
 
 
             sleep_time=1
