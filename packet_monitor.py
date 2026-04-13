@@ -11,6 +11,7 @@ from logging.handlers import TimedRotatingFileHandler
 import time
 import os
 import regex
+import re
 import json
 import base64
 import subprocess
@@ -59,6 +60,7 @@ def cli():
     parser.add_argument('--datadir', required=True, type=str, help='Directory where the 160 byte packets will be placed')
     parser.add_argument('--logdir', required=True, type=str, help='Directory where the log file will be placed')
     parser.add_argument('--gromain_logdir', required=True, type=str, help='Directory where the gromain log files will be placed')
+    parser.add_argument('--bat_catalog', required=True, type=str, help='Full path to the location of the bat onboard catalog used to identify known sources.')
     parser.add_argument('--logname', required=False, type=str, default="packet_monitor.log", help='Directory where the log file will be placed')
     parser.add_argument('--send_json', action='store_true',
                         help="This allows for the json notices to be sent via kafka.")
@@ -99,7 +101,34 @@ def _reset_nested_dict(input_dict):
 def reset_global_notice_counter():
     _reset_nested_dict(_GLOBAL_NOTICE_COUNTER)
 
-def classic_to_json_remapping(parsed_dict, is_archival=False):
+def identify_known_source(parsed_dict, bat_catalog):
+    log = logging.getLogger(__name__)
+
+    #read in the bat catalog and get the name of the source that has been triggered on and put it in the
+    # classification field
+
+    source_line = None
+    source_name = None
+    source_int=parsed_dict.get("catalog_number")
+    pattern = re.compile(rf"\|.*\|\s*{source_int}\s*\|.*")
+
+    with open(bat_catalog, 'r') as file:
+        for line in file:
+            if re.search(pattern, line):
+                source_line = line.strip()
+
+    if source_line is not None:
+        #remove start/end |, split by | and then get the name and strip off any spaces
+        source_name=source_line.strip("|").split("|")[2].strip()
+        parsed_dict.pop("catalog_number")
+        log.debug(f"The source name {source_name} is associated with the catalog number {source_int}.")
+    else:
+        log.debug(f"A source name was not obtained from the catalog number {source_int}.")
+
+    return source_name
+
+
+def classic_to_json_remapping(parsed_dict, bat_catalog, is_archival=False):
     log = logging.getLogger(__name__)
 
     instrument_key=None
@@ -114,6 +143,18 @@ def classic_to_json_remapping(parsed_dict, is_archival=False):
             if "POS" in notice_type:
                 #QL and POS go here
                 global_counter_key="position"
+
+                #identify if we have a known source and need to extract it's name or not
+                if parsed_dict.get("catalog_number") is not None:
+                    source_name = identify_known_source(parsed_dict, bat_catalog)
+                    if source_name is not None:
+                        parsed_dict["classification"]={source_name:1.0, "unknown":0.0}
+                        parsed_dict.pop("catalog_number")
+                else:
+                    parsed_dict["classification"] = {"known": 0.0, "unknown": 1.0}
+                    parsed_dict.pop("catalog_number")
+
+
             elif "LC" in notice_type:
                 global_counter_key="lightcurve"
             else:
@@ -187,7 +228,7 @@ def classic_to_json_remapping(parsed_dict, is_archival=False):
             log.debug(f"The converted notice does not have an alert_tense key to modify.")
 
 
-def convert_notice(binary_path, gromain_log):
+def convert_notice(binary_path, gromain_log, bat_catalog):
     log = logging.getLogger(__name__)
 
     value = binary_path.read_bytes()
@@ -202,7 +243,7 @@ def convert_notice(binary_path, gromain_log):
         log.info(f"Done attaching files for the notice.")
 
     #add in the global alert type, alert tense, record number
-    classic_to_json_remapping(parsed_dict)
+    classic_to_json_remapping(parsed_dict, bat_catalog)
 
     #add in the alert_datetime field (though we are slightly earlier than when we actually send off the json
     #parsed_dict["alert_datetime"]=get_timenow() #maybe we dont need this?
@@ -382,6 +423,7 @@ def main(args):
     logdir=Path(args.logdir)
     gromain_logdir=Path(args.gromain_logdir)
     max_t=args.delta_t_max
+    bat_catalog=Path(args.bat_catalog)
 
 
     #do some error checking
@@ -391,6 +433,9 @@ def main(args):
         raise RuntimeError(f"The directory where the log file will be placed, {logdir} doesnt exist.")
     if not gromain_logdir.exists():
         raise RuntimeError(f"The gromain log directory {gromain_logdir} doesnt exist.")
+    if not bat_catalog.exists():
+        raise RuntimeError(f"The specified on-board catalog {bat_catalog} doesnt exist.")
+
 
     #get the gromain logname
     gromain_log=select_gromain_log(gromain_logdir)
@@ -510,7 +555,7 @@ def main(args):
                     #try to do the conversion but catch any errors and print them and move onto the next binary packet.
                     # if we raised an exception in this packet, then dont try to send anything
                     try:
-                        parsed_dict=convert_notice(packet, gromain_log)
+                        parsed_dict=convert_notice(packet, gromain_log, bat_catalog)
                         save_converted_notice(parsed_dict, json_conversion_file)
                         was_converted=True
                     except Exception as e:
