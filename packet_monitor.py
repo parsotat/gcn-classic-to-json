@@ -145,14 +145,16 @@ def classic_to_json_remapping(parsed_dict, bat_catalog, is_archival=False):
                 global_counter_key="position"
 
                 #identify if we have a known source and need to extract it's name or not
-                if parsed_dict.get("catalog_number") is not None:
-                    source_name = identify_known_source(parsed_dict, bat_catalog)
-                    if source_name is not None:
-                        parsed_dict["classification"]={source_name:1.0, "unknown":0.0}
+                #the QL position doesnt have this
+                if "QL" not in notice_type:
+                    if parsed_dict.get("catalog_number") is not None:
+                        source_name = identify_known_source(parsed_dict, bat_catalog)
+                        if source_name is not None:
+                            parsed_dict["classification"]={source_name:1.0, "unknown":0.0}
+                            parsed_dict.pop("catalog_number")
+                    else:
+                        parsed_dict["classification"] = {"known": 0.0, "unknown": 1.0}
                         parsed_dict.pop("catalog_number")
-                else:
-                    parsed_dict["classification"] = {"known": 0.0, "unknown": 1.0}
-                    parsed_dict.pop("catalog_number")
 
 
             elif "LC" in notice_type:
