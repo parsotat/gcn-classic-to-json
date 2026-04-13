@@ -221,7 +221,7 @@ def classic_to_json_remapping(parsed_dict, bat_catalog, is_archival=False):
 
 
     except KeyError as e:
-        log.debug(f"The converted notice does not have a notice_type key to modify.")
+        log.debug(f"The converted notice does not have a notice_type key to modify: {e}.")
 
     if is_archival:
         try:
