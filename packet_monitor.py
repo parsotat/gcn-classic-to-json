@@ -120,7 +120,6 @@ def identify_known_source(parsed_dict, bat_catalog):
     if source_line is not None:
         #remove start/end |, split by | and then get the name and strip off any spaces
         source_name=source_line.strip("|").split("|")[2].strip()
-        parsed_dict.pop("catalog_number")
         log.debug(f"The source name {source_name} is associated with the catalog number {source_int}.")
     else:
         log.debug(f"A source name was not obtained from the catalog number {source_int}.")
