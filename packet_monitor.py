@@ -247,14 +247,14 @@ def convert_notice(binary_path, gromain_log, bat_catalog):
     classic_to_json_remapping(parsed_dict, bat_catalog)
 
     #add in the alert_datetime field (though we are slightly earlier than when we actually send off the json
-    parsed_dict["alert_datetime"]=get_timenow() 
+    parsed_dict["alert_datetime"]=get_timenow()
 
     return parsed_dict
 
 def save_converted_notice(parsed_dict, json_path):
     log = logging.getLogger(__name__)
 
-    actual_str = dumps(parsed_dict, indent=2)
+    actual_str = dumps(parsed_dict, indent=2, sort_keys=True)
 
     with json_path.open("w") as f:
         print(actual_str, file=f)
@@ -401,7 +401,7 @@ def send_notice(parsed_dict, producer):
 
     try:
         # JSON data converted to byte string format
-        data = dumps(parsed_dict).encode()
+        data = dumps(parsed_dict, sort_keys=True).encode()
         is_serialized=True
     except Exception as e:
         log.debug(f"There was an error with serializing the parsed dictionary into a string: \n")
