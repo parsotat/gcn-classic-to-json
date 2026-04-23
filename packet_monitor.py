@@ -247,7 +247,7 @@ def convert_notice(binary_path, gromain_log, bat_catalog):
     classic_to_json_remapping(parsed_dict, bat_catalog)
 
     #add in the alert_datetime field (though we are slightly earlier than when we actually send off the json
-    #parsed_dict["alert_datetime"]=get_timenow() #maybe we dont need this?
+    parsed_dict["alert_datetime"]=get_timenow() 
 
     return parsed_dict
 
