@@ -43,7 +43,7 @@ def parse(bin):
 
         # bin[4] = trig_obs_num: lower 24 bits = Trigger number, upper 8 bits = Observation number.
         # Assigned by the on-board BAT flight software to uniquely identify each trigger.
-        "id": [bin[4]],
+        "id": bin[4],
 
         # soln_status bit 30 (test_submit): set if this is a test submission;
         # unset for real current notices.
