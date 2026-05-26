@@ -32,7 +32,7 @@ def parse_uvot_srclist(bin):
 
         # bin[4] = trig_obs_num: lower 24 bits = Trigger number, upper 8 bits = Observation number.
         # Assigned by the on-board BAT flight software to uniquely identify each trigger.
-        "id": [bin[4]],
+        "id": bin[4],
 
         # misc bit 30 (ground_generated): set if this notice was ground-generated (type=80);
         # always 0 for the raw flight form (type=73).

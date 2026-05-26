@@ -17,7 +17,7 @@ def parse_swift_xrt_sper(bin):
 
         # bin[4] = trig_obs_num: lower 24 bits = Trigger number, upper 8 bits = Observation number.
         # Assigned by the on-board BAT flight software to uniquely identify each trigger.
-        "id": [bin[4]],
+        "id": bin[4],
 
         # bin[5] = burst_tjd: Truncated Julian Day of the Swift-BAT transient trigger.
         # bin[6] = burst_sod: UT seconds-of-day of the same trigger time, in centi-seconds

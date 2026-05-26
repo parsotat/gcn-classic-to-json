@@ -21,7 +21,7 @@ def parse(bin):
     return {
         "mission": "SWIFT",
         "instrument": "XRT",
-        "id": [bin[4]],
+        "id": bin[4],
         "alert_type": "retraction" if misc_bits[5] else "initial",
         "trigger_time": utils.datetime_to_iso8601(bin[5], bin[6]),
         "ra_pointing": bin[7] * 1e-4,
