@@ -213,10 +213,10 @@ def classic_to_json_remapping(parsed_dict, bat_catalog, is_archival=False):
         # add in the schema name
         #TODO: deal with pointing notices
         if instrument_key is not None:
-            parsed_dict['$schema'] = f'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/swift/{instrument_key}/{global_counter_key}.schema.json'
+            parsed_dict['$schema'] = f'https://gcn.nasa.gov/schema/main/gcn/notices/swift/{instrument_key}/{global_counter_key}.schema.json'
         else:
             parsed_dict[
-                '$schema'] = f'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/swift/{global_counter_key}.schema.json'
+                '$schema'] = f'https://gcn.nasa.gov/schema/main/gcn/notices/swift/{global_counter_key}.schema.json'
 
 
     except KeyError as e:
