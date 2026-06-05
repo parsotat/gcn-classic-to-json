@@ -85,7 +85,7 @@ def parse_swift_xrt_image(bin):
         # Stored in units of 0.0001-deg (fl.pt. degrees * 10000, range -180 to +180).
         # Divide by 10000 to recover degrees.
         # Schema field: pointing_roll.
-        "pointing_roll": bin[16] * 1e-4,
+        "roll": bin[16] * 1e-4,
 
         # bin[17] = gain/mod/wav: packed 32-bit word containing amplifier gain, CCD readout
         # mode, and waveform ID. Decoded externally into separate variables.
