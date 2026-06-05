@@ -27,7 +27,7 @@ def parse(bin):
 
         # bin[4] = trig_obs_num: lower 24 bits = Trigger number, upper 8 bits = Observation number.
         # Assigned by the on-board BAT flight software to uniquely identify each trigger.
-        "id": bin[4],
+        "id": str(bin[4]),
 
         # soln_status bit 5 (def_not_grb): ground-assigned flag indicating the event is
         # definitively NOT a GRB — i.e. this is a retraction notice.

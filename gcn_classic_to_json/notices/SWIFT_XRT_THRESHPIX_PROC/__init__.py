@@ -17,7 +17,7 @@ def parse_swift_xrt_thresh(bin):
 
         # bin[4] = trig_obs_num: lower 24 bits = Trigger number, upper 8 bits = Observation number.
         # Assigned by the on-board BAT flight software to uniquely identify each trigger.
-        "id": bin[4],
+        "id": str(bin[4]),
 
         # bin[5] = Start_tjd: Truncated Julian Day of the start of the first CCD integration
         #   in the thresholded pixels accumulation.
