@@ -49,11 +49,11 @@ def parse_swift_xrt_sper(bin):
         #   type=87 (SWIFT_XRT_SPER): number of telemetry packets used in this integration.
         #   type=88 (SWIFT_XRT_SPER_PROC): serial number of this message (1–3), as the
         #     ground-processed SPER notice is split into a sequence of up to 3 messages.
-        "num_packets": bin[12],
+        "number_packets": bin[12],
 
         # bin[20] = num_evt: total number of XRT events (photons) collected during the
         # SPER integration period.
-        "num_events": bin[20],
+        "number_events": bin[20],
 
         # misc bit 29 (watchdog_timeout): set if this XRT_SPER notice was forced out
         # early via the watchdog timeout mechanism rather than completing normally.
